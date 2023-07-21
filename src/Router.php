@@ -301,23 +301,11 @@ class Router
         $response = new Response();
         $matcher->match();
 
-        #Verificar se a rota existe
-        if (!$matcher->route) {
-            self::$logger->debug('Rota não encontrada');
-            throw new ResponseError('Rota não encontrado', HTTPResponseCode::informationNotFound);
-        }
-
         self::$logger->debug([
             "route" => $matcher->path,
             "founded" => $matcher->route,
             "method" => $matcher->method->value,
          ], 'Inicializando rotas');
-
-        #Se for o method OPTIONS
-        if (HTTPMethods::options == $matcher->method) {
-            $options = self::filterOptions($matcher->route);
-            $response->sendAllowedMethods($options);
-        }
 
         #Se for um grupo de rotas
         if (is_array($matcher->route)) {
@@ -328,6 +316,18 @@ class Router
             }
         } else {
             $route = $matcher->route;
+        }
+
+        #Verificar se a rota existe
+        if (!$route) {
+            self::$logger->debug('Rota não encontrada');
+            throw new ResponseError('Rota não encontrado', HTTPResponseCode::informationNotFound);
+        }
+
+        #Se for o method OPTIONS
+        if (HTTPMethods::options == $matcher->method) {
+            $options = self::filterOptions($matcher->route);
+            $response->sendAllowedMethods($options);
         }
 
         #Verificar se o methodo é permitido
