@@ -14,6 +14,8 @@ ________________________________________________________________________________
  *
  *********************************************************************************************/
 
+use Komodo\Routes\CORS\CORSHeaders;
+use Komodo\Routes\CORS\CORSOptions;
 use Komodo\Routes\Enums\HTTPMethods;
 use Komodo\Routes\Enums\HTTPResponseCode;
 use Komodo\Routes\Interfaces\ViewBaseFunctions;
@@ -21,6 +23,7 @@ use Komodo\Routes\Interfaces\ViewBaseFunctions;
 class Response
 {
     use ViewBaseFunctions;
+    use CORSHeaders;
     /**
      * @var  mixed
      */
@@ -44,14 +47,21 @@ class Response
     public $processBody;
 
     /**
+     * @var CORSOptions
+     */
+    private $corsOptions;
+
+    /**
+     * @param CORSOptions $cors
      * @param array|null $params
      * @param array $body
      * @param array $headers
      * @param \Closure $headers
      * @param HTTPMethods $method
      */
-    public function __construct($body = null, $headers = null, $processBody = null)
+    public function __construct($cors, $body = null, $headers = null, $processBody = null)
     {
+        $this->corsOptions = $cors;
         $this->body = $body;
         $this->headers = $headers ?: [
             "Content-Type" => "text/html; charset=utf-8",
@@ -96,11 +106,8 @@ class Response
 
         $body = call_user_func_array($this->processBody, [ $this->body ]);
 
-        if ($body) {
-            echo $body;
-        }
+        $this->displayResponse($body);
 
-        die();
     }
 
     /**
@@ -115,12 +122,9 @@ class Response
         $this->prepareResponse();
 
         $body = call_user_func_array($this->processBody, [ $this->body ]);
+        $body = $body?json_encode($body): $body;
+        $this->displayResponse($body);
 
-        if ($body) {
-            echo json_encode($body);
-        }
-
-        die();
     }
 
     /**
@@ -132,21 +136,6 @@ class Response
     {
         $this->code = $code;
         return $this;
-    }
-
-    /**
-     * @param int[]|HTTPMethods[] $methods
-     *
-     * @return mixed
-     */
-    public function sendAllowedMethods($methods)
-    {
-        $alloweds = array_map(function ($value) {
-            return $value instanceof HTTPMethods ? $value->value : $value;
-        }, $methods);
-        $alloweds = implode(', ', $alloweds);
-        $this->header("Allow", $alloweds);
-        $this->send();
     }
 
     // #Private Methods
@@ -162,6 +151,13 @@ class Response
         foreach ($this->headers as $key => $value) {
             header("$key: $value");
         }
+        $this->setCORSHeaders();
         http_response_code($code);
+    }
+
+    private function displayResponse($body)
+    {
+        echo $body;
+        die();
     }
 }

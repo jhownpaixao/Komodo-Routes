@@ -14,6 +14,7 @@ ________________________________________________________________________________
  *********************************************************************************************/
 
 use Komodo\Logger\Logger;
+use Komodo\Routes\CORS\CORSOptions;
 use Komodo\Routes\Enums\HTTPMethods;
 use Komodo\Routes\Enums\HTTPResponseCode;
 use Komodo\Routes\Enums\Paths;
@@ -95,7 +96,6 @@ class Router
         }
 
         // self::$routes[ $path ] = $route;
-
         return new self;
     }
 
@@ -222,19 +222,24 @@ class Router
     }
     /**
      * @param HTTPMethods $matcherMethod
-     * @param HTTPMethods|HTTPMethods[]|string[] $routeMethod
+     * @param HTTPMethods|HTTPMethods[]|string[]|string $routeMethod
      *
      * @return boolean
      */
     private static function validateMethods($matcherMethod, $routeMethod)
     {
-        if ($routeMethod instanceof HTTPMethods) {
-            return $matcherMethod->value == $routeMethod->value;
-        } elseif (gettype($routeMethod) == 'array') {
-            return in_array($matcherMethod->value, $routeMethod);
-        } else {
-            return $matcherMethod->value == $routeMethod;
+        $matcherMethod = $matcherMethod instanceof HTTPMethods ? $matcherMethod->value : $matcherMethod;
+
+        if (is_array($routeMethod)) {
+            $routeMethod = array_map(function ($var) {
+                return $var instanceof HTTPMethods ? $var->value : $var;
+            }, $routeMethod);
+
+            return in_array($matcherMethod, $routeMethod);
         }
+        $routeMethod = $routeMethod instanceof HTTPMethods ? $routeMethod->value : $routeMethod;
+
+        return $matcherMethod === $routeMethod;
     }
 
     /**
@@ -256,6 +261,24 @@ class Router
         return $methods;
     }
 
+    private static function generateAllowedMethods($methods)
+    {
+        $allows = [  ];
+
+        if (is_array($methods)) {
+            foreach ($methods as $method) {
+                if (is_array($method)) {
+                    $allows = self::generateAllowedMethods($method);
+                } else {
+                    $allows[  ] = $method instanceof HTTPMethods ? $method->value : $method;
+                }
+            }
+        } else {
+            $allows[  ] = $methods instanceof HTTPMethods ? $methods->value : $methods;
+        }
+        return $allows;
+    }
+
     // #Public Methods
     public static function response(HTTPResponseCode $status, $status_message, $data = [  ])
     {
@@ -274,31 +297,30 @@ class Router
      *
      * @return void
      */
-    public function use($data)
-    {
+    function use ($data) {
         if (gettype($data) === 'string') {
             require_once $data;
         }
     }
 
     /**
-     * @param Logger|null $logger
      * @param bool $handleErros
+     * @param CORSOptions|null $cors
+     * @param Logger|null $logger
      *
-     * @return mixed
+     * @return void
      */
-    public static function listen($handleErros = false, $logger = null)
+    public static function listen($handleErros = false, $cors = null, $logger = null)
     {
         if ($handleErros) {
             set_error_handler(function ($errno, $errstr) {
                 throw new ResponseError($errstr, $errno);
             });
         }
-
         self::$logger = $logger ? clone $logger : new Logger;
         self::$logger->register('Komodo\\Loger');
         $matcher = new Matcher(self::$routes, self::$prefixes);
-        $response = new Response();
+        $response = new Response($cors ?: new CORSOptions);
         $route = null;
         $matcher->match();
 
@@ -322,19 +344,33 @@ class Router
         #Verificar se a rota existe
         if (!$route) {
             self::$logger->debug('Rota não encontrada');
-            throw new ResponseError('Rota não encontrado', HTTPResponseCode::informationNotFound);
+            $response->write([
+                "message" => "Rota não encontrada",
+                "status" => false,
+             ])->status(HTTPResponseCode::informationNotFound)->sendJson();
         }
 
         #Se for o method OPTIONS
         if (HTTPMethods::options == $matcher->method) {
             $options = self::filterOptions($matcher->route);
-            $response->sendAllowedMethods($options);
+            $alloweds = self::generateAllowedMethods($options);
+            $response->header('Allow', implode(', ', $alloweds))->send();
         }
 
         #Verificar se o methodo é permitido
         if (!self::validateMethods($matcher->method, $route->method)) {
             self::$logger->debug('Método não implementado');
-            throw new ResponseError('Método não implementado', HTTPResponseCode::methodNotAllowed);
+            $options = self::filterOptions($matcher->route);
+            $alloweds = self::generateAllowedMethods($options);
+
+            $response
+                ->write([
+                    "message" => "Método não implementado",
+                    "status" => false,
+                 ])
+                ->status(HTTPResponseCode::methodNotAllowed)
+                ->header('Access-Control-Allow-Methods', implode(', ', $alloweds))
+                ->sendJson();
         }
 
         #Definindo rota requisitada
