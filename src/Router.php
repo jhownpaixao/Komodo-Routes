@@ -299,6 +299,7 @@ class Router
         self::$logger->register('Komodo\\Loger');
         $matcher = new Matcher(self::$routes, self::$prefixes);
         $response = new Response();
+        $route = null;
         $matcher->match();
 
         self::$logger->debug([
