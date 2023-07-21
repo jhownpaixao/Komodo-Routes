@@ -144,7 +144,7 @@ class Response
         $alloweds = array_map(function ($value) {
             return $value instanceof HTTPMethods ? $value->value : $value;
         }, $methods);
-        $alloweds = implode(',', $alloweds);
+        $alloweds = implode(', ', $alloweds);
         $this->header("Allow", $alloweds);
         $this->send();
     }

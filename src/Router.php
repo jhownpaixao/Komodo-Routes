@@ -313,6 +313,12 @@ class Router
             "method" => $matcher->method->value,
          ], 'Inicializando rotas');
 
+        #Se for o method OPTIONS
+        if (HTTPMethods::options == $matcher->method) {
+            $options = self::filterOptions($matcher->route);
+            $response->sendAllowedMethods($options);
+        }
+
         #Se for um grupo de rotas
         if (is_array($matcher->route)) {
             foreach ($matcher->route as $var) {
@@ -322,11 +328,6 @@ class Router
             }
         } else {
             $route = $matcher->route;
-        }
-        #Se for o method OPTIONS
-        if (HTTPMethods::options == $matcher->method) {
-            $options = self::filterOptions($route);
-            $response->sendAllowedMethods($options);
         }
 
         #Verificar se o methodo é permitido
