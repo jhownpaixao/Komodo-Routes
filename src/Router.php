@@ -297,7 +297,8 @@ class Router
      *
      * @return void
      */
-    function use ($data) {
+    public function use($data) 
+    {
         if (gettype($data) === 'string') {
             require_once $data;
         }
@@ -318,7 +319,7 @@ class Router
             });
         }
         self::$logger = $logger ? clone $logger : new Logger;
-        self::$logger->register('Komodo\\Loger');
+        self::$logger->register('Komodo\\Router');
         $matcher = new Matcher(self::$routes, self::$prefixes);
         $response = new Response($cors ?: new CORSOptions);
         $route = null;
@@ -342,7 +343,7 @@ class Router
         }
 
         #Verificar se a rota existe
-        if (!$route) {
+        if (!$matcher->route) {
             self::$logger->debug('Rota não encontrada');
             $response->write([
                 "message" => "Rota não encontrada",
@@ -357,12 +358,11 @@ class Router
             $response->header('Allow', implode(', ', $alloweds))->send();
         }
 
-        #Verificar se o methodo é permitido
-        if (!self::validateMethods($matcher->method, $route->method)) {
+        #Se o method é permitido
+        if ($matcher->route && !$route) {
             self::$logger->debug('Método não implementado');
             $options = self::filterOptions($matcher->route);
             $alloweds = self::generateAllowedMethods($options);
-
             $response
                 ->write([
                     "message" => "Método não implementado",
