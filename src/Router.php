@@ -18,6 +18,7 @@ use Komodo\Routes\Enums\HTTPMethods;
 use Komodo\Routes\Enums\HTTPResponseCode;
 use Komodo\Routes\Enums\Paths;
 use Komodo\Routes\Error\ResponseError;
+use Komodo\Routes\Response;
 
 class Router
 {
@@ -208,7 +209,7 @@ class Router
 
     private static function getPaths()
     {
-        $srvdir = str_replace("/" . APP_FOLDER . "/", "", $_SERVER[ "REQUEST_URI" ]);
+        $srvdir = str_replace("/", "", $_SERVER[ "REQUEST_URI" ]);
         $srvdir = explode(".php", $srvdir)[ 0 ];
         $dirss = "";
         for ($i = 1; $i <= substr_count($srvdir, "/"); $i++) {
@@ -217,7 +218,7 @@ class Router
         ;
 
         /*  Logger::BreackAndLog([$srvdir, $dirss, APP_FOLDER]); */
-        return [ $srvdir, $dirss, APP_FOLDER ];
+        return [ $srvdir, $dirss ];
     }
     /**
      * @param HTTPMethods $matcherMethod
@@ -234,6 +235,25 @@ class Router
         } else {
             return $matcherMethod->value == $routeMethod;
         }
+    }
+
+    /**
+     * @param Route|Route[] $routes
+     *
+     * @return array
+     */
+    private static function filterOptions($routes)
+    {
+        $methods = [  ];
+
+        if (is_array($routes)) {
+            foreach ($routes as $route) {
+                $methods[  ] = $route->method;
+            }
+        } else {
+            $methods[  ] = $routes->method;
+        }
+        return $methods;
     }
 
     // #Public Methods
@@ -274,10 +294,18 @@ class Router
                 throw new ResponseError($errstr, $errno);
             });
         }
+
         self::$logger = $logger ? clone $logger : new Logger;
         self::$logger->register('Komodo\\Loger');
         $matcher = new Matcher(self::$routes, self::$prefixes);
+        $response = new Response();
         $matcher->match();
+
+        #Verificar se a rota existe
+        if (!$matcher->route) {
+            self::$logger->debug('Rota não encontrada');
+            throw new ResponseError('Rota não encontrado', HTTPResponseCode::informationNotFound);
+        }
 
         self::$logger->debug([
             "route" => $matcher->path,
@@ -285,6 +313,7 @@ class Router
             "method" => $matcher->method->value,
          ], 'Inicializando rotas');
 
+        #Se for um grupo de rotas
         if (is_array($matcher->route)) {
             foreach ($matcher->route as $var) {
                 if ($var->method === $matcher->method) {
@@ -294,14 +323,11 @@ class Router
         } else {
             $route = $matcher->route;
         }
-
-        #Verificar se a rota existe
-        if (!$route) {
-            self::$logger->debug('Rota não encontrada');
-            throw new ResponseError('Rota não encontrado', HTTPResponseCode::informationNotFound);
+        #Se for o method OPTIONS
+        if (HTTPMethods::options == $matcher->method) {
+            $options = self::filterOptions($route);
+            $response->sendAllowedMethods($options);
         }
-
-        #Se for um grupo de rotas
 
         #Verificar se o methodo é permitido
         if (!self::validateMethods($matcher->method, $route->method)) {
@@ -320,7 +346,6 @@ class Router
         }
         self::$logger->debug($body, 'Criando requeste');
         $request = new Request($matcher->params, $body, apache_request_headers(), $matcher->method);
-        $response = new Response();
         #Executa as middlewares
         if ($route->middlewares) {
             self::processCallbacks($route->middlewares, $request, $response);
@@ -329,7 +354,6 @@ class Router
         #Executar o controller
         self::processCallbacks($route->callback, $request, $response);
     }
-
     public static function setPath(Paths $type, $path)
     {
         switch ($type) {

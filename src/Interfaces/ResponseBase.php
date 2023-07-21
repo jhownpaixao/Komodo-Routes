@@ -15,6 +15,7 @@ namespace Komodo\Routes\Interfaces;
 |-----------------------------------------------------------------------------
 |*/
 
+use Komodo\Routes\Enums\HTTPMethods;
 use Komodo\Routes\Enums\HTTPResponseCode;
 
 trait ResponseBase
@@ -34,7 +35,7 @@ trait ResponseBase
         echo (json_encode($data));
         die();
     }
-    protected static function send($data, $code = 200)
+    protected static function send($data, $code = HTTPResponseCode::success)
     {
         $code = $code instanceof HTTPResponseCode ? $code->value : $code;
         self::prepareResponse($code);

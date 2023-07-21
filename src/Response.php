@@ -134,6 +134,21 @@ class Response
         return $this;
     }
 
+    /**
+     * @param int[]|HTTPMethods[] $methods
+     *
+     * @return mixed
+     */
+    public function sendAllowedMethods($methods)
+    {
+        $alloweds = array_map(function ($value) {
+            return $value instanceof HTTPMethods ? $value->value : $value;
+        }, $methods);
+        $alloweds = implode(',', $alloweds);
+        $this->header("Allow", $alloweds);
+        $this->send();
+    }
+
     // #Private Methods
     /**
      * @param int $code

@@ -20,7 +20,7 @@ enum HTTPMethods: string
 {
     case get = 'GET';
     case post = 'POST';
-    case path = 'PATH';
+    case path = 'PATCH';
     case put = 'PUT';
     case delete = 'DELETE';
     case head = 'HEAD';
