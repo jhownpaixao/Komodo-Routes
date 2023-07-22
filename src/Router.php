@@ -434,7 +434,7 @@ class Router
      *
      * @return [type]
      */
-    public function middleware($callback)
+    public static function middleware($callback)
     {
         self::$middewares = $callback;
         return new self;
