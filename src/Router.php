@@ -297,8 +297,7 @@ class Router
      *
      * @return void
      */
-    public function use($data) 
-    {
+    function use ($data) {
         if (gettype($data) === 'string') {
             require_once $data;
         }
@@ -441,7 +440,7 @@ class Router
 
     public static function prefix($prefix)
     {
-        $prefix ??= '';
+        $prefix = $prefix ?: '';
         self::$prefix .= $prefix;
 
         if (self::$groupData) {
