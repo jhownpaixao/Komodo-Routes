@@ -18,6 +18,15 @@ use Komodo\Routes\Response;
 
 trait ViewBaseFunctions
 {
+    /**
+     * @var string|null
+     */
+    private $template;
+
+    /**
+     * @var string
+     */
+    private $view;
 
     /**
      * @param Response $response
@@ -47,9 +56,8 @@ trait ViewBaseFunctions
         |   e depois enviar através do response para o cliente
         |*/
         ob_start();
-        include_once $view;
+        include $view;
         $html = ob_get_clean();
-
         /*
         |-----------------------------------------------------------------------------
         | Envio do html montado
@@ -58,14 +66,26 @@ trait ViewBaseFunctions
         |   armazenado na $html e será renderizado agora usando o
         |   $response->write e ->send
         |*/
+
         return $html;
     }
 
     public function sendView($view)
     {
         $vars = is_array($this->body) ? $this->body : [  ];
-        $html = $this->renderView($view, $vars);
 
+        if ($this->template) {
+            $html = $this->renderView($this->template, $vars);
+            $html = preg_replace('/<Outlet[^>]*>/', $this->renderView($view, $vars), $html);
+        } else {
+            $html = $this->renderView($view, $vars);
+        }
         $this->write($html)->send();
+    }
+
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+        return $this;
     }
 }
