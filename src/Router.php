@@ -297,7 +297,8 @@ class Router
      *
      * @return void
      */
-    function use ($data) {
+    public function use($data)
+    {
         if (gettype($data) === 'string') {
             require_once $data;
         }
