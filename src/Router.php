@@ -305,8 +305,7 @@ class Router
      *
      * @return void
      */
-    public function use($data)
-    {
+    function use ($data) {
         if (gettype($data) === 'string') {
             require_once $data;
         }
@@ -420,7 +419,7 @@ class Router
 
     public static function group($callback)
     {
-        self::$groupData[  ] = new RouteGroup(self::$prefix);
+        self::$groupData[  ] = new RouteGroup(self::$prefix, self::$middewares);
         $callback->__invoke();
 
         self::save();
