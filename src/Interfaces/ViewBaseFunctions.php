@@ -83,6 +83,11 @@ trait ViewBaseFunctions
         $this->write($html)->send();
     }
 
+    /**
+     * @param string $template
+     *
+     * @return $this
+     */
     public function setTemplate($template)
     {
         $this->template = $template;
