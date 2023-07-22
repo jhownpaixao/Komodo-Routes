@@ -45,6 +45,11 @@ class Router
      */
     private static $groupData = null;
 
+    /**
+     * @var \Closure|string|string[]
+     */
+    private static $middewares = null;
+
     // !Router Props
     /**
      * @var array<string,Route|Route[]>
@@ -90,8 +95,10 @@ class Router
 
         $route = self::createRoute($path, $method, $callback);
         if (self::$groupData) {
+            $route->setMiddleware(end(self::$groupData)->getMiddlewares());
             end(self::$groupData)->addRoute($route);
         } else {
+            $route->setMiddleware(self::$middewares);
             self::$routes[ $path ] = $route;
         }
 
@@ -143,6 +150,7 @@ class Router
         }
 
         self::$data = [  ];
+        self::$middewares = null;
         $prfx = explode('/', self::$prefix);
         array_pop($prfx);
         self::$prefix = implode('/', $prfx);
@@ -428,15 +436,8 @@ class Router
      */
     public function middleware($callback)
     {
-
-        if (self::$groupData) {
-            foreach (end(self::$groupData)->getRoutes() as $route) {
-                $route->setMiddleware($callback);
-            }
-        } else {
-            self::$data[ 0 ]->setMiddleware($callback);
-        }
-        self::save();
+        self::$middewares = $callback;
+        return new self;
     }
 
     public static function prefix($prefix)

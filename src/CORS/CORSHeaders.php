@@ -39,14 +39,13 @@ trait CORSHeaders
     public function setCORSHeaders()
     {
         $this->setControllAllowOringin($this->getRequestOrigin());
-
     }
 
     private function getRequestOrigin()
     {
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
             return $_SERVER[ 'HTTP_ORIGIN' ];
-        } else if (array_key_exists('HTTP_REFERER', $_SERVER)) {
+        } elseif (array_key_exists('HTTP_REFERER', $_SERVER)) {
             return $_SERVER[ 'HTTP_REFERER' ];
         } else {
             return $_SERVER[ 'REMOTE_ADDR' ];
