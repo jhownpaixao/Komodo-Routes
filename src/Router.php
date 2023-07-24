@@ -286,6 +286,28 @@ class Router
         return $allows;
     }
 
+    /**
+     * @param HTTPMethods $requested
+     * @param Route $route
+     *
+     * @return mixed
+     */
+    private static function validadeMethod($requested, $route)
+    {
+
+        $methods = $route->method;
+        if (is_array($methods)) {
+            foreach ($methods as $method) {
+                if ($requested->getValue() === $method) {
+                    return true;
+                }
+            }
+        } elseif ($requested->getValue() === $methods) {
+            return true;
+        }
+        return false;
+    }
+
     // #Public Methods
     public static function response(HTTPResponseCode $status, $status_message, $data = [  ])
     {
@@ -304,7 +326,7 @@ class Router
      *
      * @return void
      */
-    public function use($data)
+    private function use($data)
     {
         if (gettype($data) === 'string') {
             require_once $data;
@@ -338,14 +360,15 @@ class Router
             "method" => $matcher->method->getValue(),
          ], 'Inicializando rotas');
 
+        var_dump($matcher->route);
         #Se for um grupo de rotas
         if (is_array($matcher->route)) {
             foreach ($matcher->route as $var) {
-                if ($var->method === $matcher->method) {
+                if (self::validadeMethod($matcher->method, $var)) {
                     $route = $var;
                 }
             }
-        } elseif ($matcher->route && $matcher->route->method === $matcher->method->getValue()) {
+        } elseif (self::validadeMethod($matcher->method, $matcher->route)) {
             $route = $matcher->route;
         }
 

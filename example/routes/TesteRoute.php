@@ -12,6 +12,6 @@ Router::get('/teste2', function () {
     echo "teste 2";
 });
 
-Router::math('/match', [ HTTPMethods::DELETE, HTTPMethods::PATCH, HTTPMethods::POST ], function (Request $request) {
+Router::math('/match', [ HTTPMethods::DELETE, HTTPMethods::PATCH, HTTPMethods::POST,HTTPMethods::GET ], function (Request $request) {
     echo "match method route: " . $request->method->getValue();
 });
