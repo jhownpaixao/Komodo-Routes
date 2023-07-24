@@ -17,7 +17,6 @@ use Komodo\Logger\Logger;
 use Komodo\Routes\CORS\CORSOptions;
 use Komodo\Routes\Enums\HTTPMethods;
 use Komodo\Routes\Enums\HTTPResponseCode;
-use Komodo\Routes\Enums\Paths;
 use Komodo\Routes\Error\ResponseError;
 use Komodo\Routes\Response;
 
@@ -82,7 +81,7 @@ class Router
     /**
      * @param string $path
      * @param callable|string $callback
-     * @param HTTPMethods|HTTPMethods[]|string[] $method
+     * @param HTTPMethods|HTTPMethods[]|string[]|string $method
      *
      * @return Router
      */
@@ -236,16 +235,16 @@ class Router
      */
     private static function validateMethods($matcherMethod, $routeMethod)
     {
-        $matcherMethod = $matcherMethod instanceof HTTPMethods ? $matcherMethod->value : $matcherMethod;
+        $matcherMethod = $matcherMethod instanceof HTTPMethods ? $matcherMethod->getValue() : $matcherMethod;
 
         if (is_array($routeMethod)) {
             $routeMethod = array_map(function ($var) {
-                return $var instanceof HTTPMethods ? $var->value : $var;
+                return $var instanceof HTTPMethods ? $var->getValue() : $var;
             }, $routeMethod);
 
             return in_array($matcherMethod, $routeMethod);
         }
-        $routeMethod = $routeMethod instanceof HTTPMethods ? $routeMethod->value : $routeMethod;
+        $routeMethod = $routeMethod instanceof HTTPMethods ? $routeMethod->getValue() : $routeMethod;
 
         return $matcherMethod === $routeMethod;
     }
@@ -278,11 +277,11 @@ class Router
                 if (is_array($method)) {
                     $allows = self::generateAllowedMethods($method);
                 } else {
-                    $allows[  ] = $method instanceof HTTPMethods ? $method->value : $method;
+                    $allows[  ] = $method instanceof HTTPMethods ? $method->getValue() : $method;
                 }
             }
         } else {
-            $allows[  ] = $methods instanceof HTTPMethods ? $methods->value : $methods;
+            $allows[  ] = $methods instanceof HTTPMethods ? $methods->getValue() : $methods;
         }
         return $allows;
     }
@@ -290,7 +289,7 @@ class Router
     // #Public Methods
     public static function response(HTTPResponseCode $status, $status_message, $data = [  ])
     {
-        header("HTTP/1.1 " . $status->value);
+        header("HTTP/1.1 " . $status->getValue());
         /* header("Content-Type: application/json; charset=utf-8"); */
         $response[ 'status' ] = $status;
         $response[ 'status_message' ] = $status_message;
@@ -336,7 +335,7 @@ class Router
         self::$logger->debug([
             "route" => $matcher->path,
             "founded" => $matcher->route,
-            "method" => $matcher->method->value,
+            "method" => $matcher->method->getValue(),
          ], 'Inicializando rotas');
 
         #Se for um grupo de rotas
@@ -356,11 +355,11 @@ class Router
             $response->write([
                 "message" => "Rota não encontrada",
                 "status" => false,
-             ])->status(HTTPResponseCode::informationNotFound)->sendJson();
+             ])->status(HTTPResponseCode::INFORMATIONNOTFOUND)->sendJson();
         }
 
         #Se for o method OPTIONS
-        if (HTTPMethods::options == $matcher->method) {
+        if (HTTPMethods::OPTIONS == $matcher->method) {
             $options = self::filterOptions($matcher->route);
             $alloweds = self::generateAllowedMethods($options);
             $response->header('Allow', implode(', ', $alloweds))->send();
@@ -376,7 +375,7 @@ class Router
                     "message" => "Método não implementado",
                     "status" => false,
                  ])
-                ->status(HTTPResponseCode::methodNotAllowed)
+                ->status(HTTPResponseCode::METHODNOTALLOWED)
                 ->header('Access-Control-Allow-Methods', implode(', ', $alloweds))
                 ->sendJson();
         }
@@ -399,17 +398,6 @@ class Router
 
         #Executar o controller
         self::processCallbacks($route->callback, $request, $response);
-    }
-    public static function setPath(Paths $type, $path)
-    {
-        switch ($type) {
-            case Paths::template:
-                self::$paths[ 'templates' ] = $path;
-                break;
-            case Paths::views:
-                self::$paths[ 'views' ] = $path;
-                break;
-        }
     }
 
     public static function routeToHref($route)
@@ -463,7 +451,7 @@ class Router
      */
     public static function get($route, $callback)
     {
-        self::register($route, $callback, HTTPMethods::get);
+        self::register($route, $callback, HTTPMethods::GET);
         return new self;
     }
 
@@ -475,7 +463,7 @@ class Router
      */
     public static function post($route, $callback)
     {
-        self::register($route, $callback, HTTPMethods::post);
+        self::register($route, $callback, HTTPMethods::POST);
         return new self;
     }
     /**
@@ -486,7 +474,7 @@ class Router
      */
     public static function put($route, $callback)
     {
-        self::register($route, $callback, HTTPMethods::put);
+        self::register($route, $callback, HTTPMethods::PUT);
         return new self;
     }
     /**
@@ -497,7 +485,7 @@ class Router
      */
     public static function patch($route, $callback)
     {
-        self::register($route, $callback, HTTPMethods::path);
+        self::register($route, $callback, HTTPMethods::PATCH);
         return new self;
     }
     /**
@@ -508,7 +496,7 @@ class Router
      */
     public static function delete($route, $callback)
     {
-        self::register($route, $callback, HTTPMethods::delete);
+        self::register($route, $callback, HTTPMethods::DELETE);
         return new self;
     }
     /**
@@ -519,7 +507,7 @@ class Router
      */
     public static function options($route, $callback)
     {
-        self::register($route, $callback, HTTPMethods::options);
+        self::register($route, $callback, HTTPMethods::OPTIONS);
         return new self;
     }
     /**
@@ -530,7 +518,7 @@ class Router
      */
     public static function head($route, $callback)
     {
-        self::register($route, $callback, HTTPMethods::head);
+        self::register($route, $callback, HTTPMethods::HEAD);
         return new self;
     }
 

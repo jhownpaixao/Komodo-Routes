@@ -1,5 +1,6 @@
 {
-  "php.version": "v8.2",
+  "php.version": "v7.4",
+  "intelephense.environment.phpVersion": "7.4.0",
   "phpcs.standard": "PSR2",
   "phpfmt.psr2": true,
   "phpfmt.indent_with_space": 4,

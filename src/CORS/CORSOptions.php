@@ -53,5 +53,4 @@ class CORSOptions
         $this->origins = $methods;
         $this->origins = $headers;
     }
-
 }

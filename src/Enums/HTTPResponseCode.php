@@ -15,31 +15,31 @@ namespace Komodo\Routes\Enums;
 |
 |-----------------------------------------------------------------------------
 |*/
+use MyCLabs\Enum\Enum;
 
-enum HTTPResponseCode: int
+class HTTPResponseCode extends Enum
 {
-/* Success */
-    case continue  = 100;
-    case accepted = 202;
-    case created = 201;
-    case success = 200;
-    case partiallyCompletedProcess = 206;
+     const CONTINUE  = 100;
+     const ACCEPTED = 202;
+     const CREATED = 201;
+     const SUCCESS = 200;
+     const PARTIALLYCOMPLETEDPROCESS = 206;
 
-/* Redirect */
-    case redirectingForResponse = 303;
+    /* Redirect */
+     const REDIRECTINGFORRESPONSE = 303;
 
-/* Warning */
-    case incompleteRequest = 400;
-    case informationAlreadyExists = 409;
-    case preconditionRequired = 428;
-    case informationNotFound = 404;
+    /* Warning */
+     const INCOMPLETEREQUEST = 400;
+     const INFORMATIONALREADYEXISTS = 409;
+     const PRECONDITIONREQUIRED = 428;
+     const INFORMATIONNOTFOUND = 404;
 
-/* Error */
-    case iternalErro = 500;
-    case methodNotAllowed = 405;
-    case informationNotTrue = 406;
-    case preProcessNotInitialized = 424;
-    case requestTimeOut = 408;
-    case informationUnauthorized = 401;
-    case informationBlocked = 403;
+    /* Error */
+     const ITERNALERRO = 500;
+     const METHODNOTALLOWED = 405;
+     const INFORMATIONNOTTRUE = 406;
+     const PREPROCESSNOTINITIALIZED = 424;
+     const REQUESTTIMEOUT = 408;
+     const INFORMATIONUNAUTHORIZED = 401;
+     const INFORMATIONBLOCKED = 403;
 }

@@ -30,9 +30,9 @@ class ResponseError extends Exception
      *
      * @return void
      */
-    public function __construct($message, $code = HTTPResponseCode::iternalErro, \Throwable $previous = null)
+    public function __construct($message, $code = HTTPResponseCode::ITERNALERRO, \Throwable $previous = null)
     {
-        $code = $code instanceof HTTPResponseCode ? $code->value : $code;
+        $code = $code instanceof HTTPResponseCode ? $code->getValue() : $code;
 
         parent::__construct($message, $code, $previous);
         $this->sendResponseToClient();

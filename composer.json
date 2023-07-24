@@ -1,23 +1,22 @@
 {
-    "name": "komodo/routes",
-    "description": "Sistema de roteamento para PHP. inspirado no express",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Komodo\\Routes\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Jhonnata Nascimento da Paixão",
-            "email": "114832000+jhownpaixao@users.noreply.github.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "komodo/logger": "dev-main"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^10.3@dev"
+  "name": "komodo/routes",
+  "description": "Sistema de roteamento para PHP. inspirado no express",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Komodo\\Routes\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "Jhonnata Nascimento da Paixão",
+      "email": "114832000+jhownpaixao@users.noreply.github.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.1.3",
+    "komodo/logger": "dev-main",
+    "myclabs/php-enum": "dev-master"
+  }
 }

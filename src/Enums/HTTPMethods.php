@@ -15,14 +15,15 @@ namespace Komodo\Routes\Enums;
 |
 |-----------------------------------------------------------------------------
 |*/
+use MyCLabs\Enum\Enum;
 
-enum HTTPMethods: string
+class HTTPMethods extends Enum
 {
-    case get = 'GET';
-    case post = 'POST';
-    case path = 'PATCH';
-    case put = 'PUT';
-    case delete = 'DELETE';
-    case head = 'HEAD';
-    case options = 'OPTIONS';
+    const GET = 'GET';
+    const POST = 'POST';
+    const PATCH = 'PATCH';
+    const PUT = 'PUT';
+    const DELETE = 'DELETE';
+    const HEAD = 'HEAD';
+    const OPTIONS = 'OPTIONS';
 }

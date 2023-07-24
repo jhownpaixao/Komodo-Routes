@@ -15,7 +15,6 @@ namespace Komodo\Routes\Interfaces;
 |-----------------------------------------------------------------------------
 |*/
 
-use Komodo\Routes\Enums\HTTPMethods;
 use Komodo\Routes\Enums\HTTPResponseCode;
 
 trait ResponseBase
@@ -26,18 +25,18 @@ trait ResponseBase
      *
      * @return mixed
      */
-    protected static function sendJson($data, $code = HTTPResponseCode::success)
+    protected static function sendJson($data, $code = HTTPResponseCode::success())
     {
-        $code = $code instanceof HTTPResponseCode ? $code->value : $code;
+        $code = $code instanceof HTTPResponseCode ? $code->getValue() : $code;
         self::prepareResponse($code, [
             "Content-Type" => "application/json",
          ]);
         echo (json_encode($data));
         die();
     }
-    protected static function send($data, $code = HTTPResponseCode::success)
+    protected static function send($data, $code = HTTPResponseCode::success())
     {
-        $code = $code instanceof HTTPResponseCode ? $code->value : $code;
+        $code = $code instanceof HTTPResponseCode ? $code->getValue() : $code;
         self::prepareResponse($code);
         echo json_encode($data);
     }

@@ -101,13 +101,9 @@ class Response
      */
     public function send()
     {
-
         $this->prepareResponse();
-
         $body = call_user_func_array($this->processBody, [ $this->body ]);
-
         $this->displayResponse($body);
-
     }
 
     /**
@@ -124,7 +120,6 @@ class Response
         $body = call_user_func_array($this->processBody, [ $this->body ]);
         $body = $body?json_encode($body): $body;
         $this->displayResponse($body);
-
     }
 
     /**
@@ -147,7 +142,7 @@ class Response
      */
     private function prepareResponse()
     {
-        $code = $this->code instanceof HTTPResponseCode ? $this->code->value : $this->code;
+        $code = $this->code instanceof HTTPResponseCode ? $this->code->getValue() : $this->code;
         foreach ($this->headers as $key => $value) {
             header("$key: $value");
         }

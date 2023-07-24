@@ -26,7 +26,7 @@ class Request
      */
     public $params;
     public array $body = [  ];
-    readonly public array $headers;
+    public array $headers;
 
     /**
      * @var HTTPMethods
