@@ -360,7 +360,6 @@ class Router
             "method" => $matcher->method->getValue(),
          ], 'Inicializando rotas');
 
-        var_dump($matcher->route);
         #Se for um grupo de rotas
         if (is_array($matcher->route)) {
             foreach ($matcher->route as $var) {
