@@ -21,7 +21,10 @@ use Komodo\Routes\Route;
 
 class Matcher
 {
-    public string $path;
+    /**
+     * @var string
+     */
+    public $path;
 
     /**
      * @var Route[]|Route|null
@@ -32,10 +35,22 @@ class Matcher
      * @var array<string,string>|null
      */
     public $params;
-    public string $prefix;
-    public array $variables;
-    public array $middlewares;
-    public HTTPMethods $method;
+    /**
+     * @var string
+     */
+    public $prefix;
+    /**
+     * @var array
+     */
+    public $variables;
+    /**
+     * @var array
+     */
+    public $middlewares;
+    /**
+     * @var HTTPMethods
+     */
+    public $method;
 
     /**
      * @var array
