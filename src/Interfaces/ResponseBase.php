@@ -25,7 +25,7 @@ trait ResponseBase
      *
      * @return mixed
      */
-    protected static function sendJson($data, $code = HTTPResponseCode::success())
+    protected static function sendJson($data, $code = HTTPResponseCode::SUCCESS)
     {
         $code = $code instanceof HTTPResponseCode ? $code->getValue() : $code;
         self::prepareResponse($code, [
@@ -34,7 +34,7 @@ trait ResponseBase
         echo (json_encode($data));
         die();
     }
-    protected static function send($data, $code = HTTPResponseCode::success())
+    protected static function send($data, $code = HTTPResponseCode::SUCCESS)
     {
         $code = $code instanceof HTTPResponseCode ? $code->getValue() : $code;
         self::prepareResponse($code);
