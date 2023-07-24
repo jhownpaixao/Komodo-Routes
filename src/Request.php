@@ -25,8 +25,16 @@ class Request
      * @var array|null
      */
     public $params;
-    public array $body = [  ];
-    public array $headers;
+
+    /**
+     * @var array
+     */
+    public $body = [  ];
+    
+    /**
+     * @var array
+     */
+    public $headers;
 
     /**
      * @var HTTPMethods
