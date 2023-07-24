@@ -345,7 +345,7 @@ class Router
                     $route = $var;
                 }
             }
-        } elseif ($matcher->route->method === $matcher->method) {
+        } elseif ($matcher->route->method === $matcher->method->getValue()) {
             $route = $matcher->route;
         }
 
