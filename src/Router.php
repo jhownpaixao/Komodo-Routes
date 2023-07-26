@@ -326,8 +326,7 @@ class Router
      *
      * @return void
      */
-    public function use($data)
-    {
+    function use ($data) {
         if (gettype($data) === 'string') {
             require_once $data;
         }
@@ -408,6 +407,9 @@ class Router
         #Definir corpo da requisição
         if ($body = @file_get_contents('php://input')) {
             $body = json_decode($body, true);
+            if (!$body) {
+                $body = $_POST;
+            }
         } else {
             $body = $_POST;
         }
