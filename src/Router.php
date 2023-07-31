@@ -326,7 +326,8 @@ class Router
      *
      * @return void
      */
-    function use ($data) {
+    public function use($data)
+    {
         if (gettype($data) === 'string') {
             require_once $data;
         }
@@ -412,6 +413,9 @@ class Router
             }
         } else {
             $body = $_POST;
+        }
+        if ($_FILES) {
+            $body = array_merge($body, $_FILES);
         }
         self::$logger->debug($body, 'Criando requeste');
         $request = new Request($matcher->params, $body, apache_request_headers(), $matcher->method);

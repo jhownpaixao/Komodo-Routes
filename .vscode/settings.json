@@ -65,46 +65,43 @@
   "phpdoc-generator.returnUndefinedType": "mixed",
   "fileHeaderComment.parameter": {
     "*": {
-        "commentbegin": "/*",
-        "commentseparator": "|-----------------------------------------------------------------------------",
-        "commentprefix": "|",
-        "commentend": "|*/",
-        "lead": "Jhonnata Paixão (Líder de Projeto)",
-        "project": "Komodo Routes"
+      "commentbegin": "/*",
+      "commentseparator": "|-----------------------------------------------------------------------------",
+      "commentprefix": "|",
+      "commentend": "|*/",
+      "lead": "Jhonnata Paixão (Líder de Projeto)",
+      "project": "Komodo Routes"
     },
     "CommentTitles": {
-        "commentbegin": "/*",
-        "commentseparator": "|-----------------------------------------------------------------------------",
-        "commentprefix": "|",
-        "commentend": "|*/",
+      "commentbegin": "/*",
+      "commentseparator": "|-----------------------------------------------------------------------------",
+      "commentprefix": "|",
+      "commentend": "|*/",
     },
-},
-"fileHeaderComment.template": {
-
-
-
+  },
+  "fileHeaderComment.template": {
     "CommentTitles": [
-        "${commentbegin}",
-        "${commentseparator}",
-        "${commentprefix} ",
-        "${commentseparator}",
-        "${commentprefix}",
-        "${commentend}",
+      "${commentbegin}",
+      "${commentseparator}",
+      "${commentprefix} ",
+      "${commentseparator}",
+      "${commentprefix}",
+      "${commentend}",
     ],
     "*": [
-        "${commentbegin}",
-        "${commentseparator}",
-        "${commentprefix} ${project}",
-        "${commentseparator}",
-        "${commentprefix}",
-        "${commentprefix} Desenvolvido por: ${lead}",
-        "${commentprefix} Iniciado em: 15/10/2022",
-        "${commentprefix} Arquivo: ${filename}",
-        "${commentprefix} Data da Criação ${date}",
-        "${commentprefix} Copyright (c) ${year}",
-        "${commentprefix}",
-        "${commentseparator}",
-        "${commentend}",
+      "${commentbegin}",
+      "${commentseparator}",
+      "${commentprefix} ${project}",
+      "${commentseparator}",
+      "${commentprefix}",
+      "${commentprefix} Desenvolvido por: ${lead}",
+      "${commentprefix} Iniciado em: 15/10/2022",
+      "${commentprefix} Arquivo: ${filename}",
+      "${commentprefix} Data da Criação ${date}",
+      "${commentprefix} Copyright (c) ${year}",
+      "${commentprefix}",
+      "${commentseparator}",
+      "${commentend}",
     ]
-}
+  }
 }
