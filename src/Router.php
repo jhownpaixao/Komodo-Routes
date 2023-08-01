@@ -360,6 +360,17 @@ class Router
             "method" => $matcher->method->getValue(),
          ], 'Inicializando rotas');
 
+
+         #Verificar se a rota existe
+        if (!$matcher->route) {
+            self::$logger->debug('Rota não encontrada');
+            $response->write([
+                "message" => "Rota não encontrada",
+                "status" => false,
+             ])->status(HTTPResponseCode::INFORMATIONNOTFOUND)->sendJson();
+        }
+
+        
         #Se for um grupo de rotas
         if (is_array($matcher->route)) {
             foreach ($matcher->route as $var) {
@@ -371,14 +382,7 @@ class Router
             $route = $matcher->route;
         }
 
-        #Verificar se a rota existe
-        if (!$matcher->route) {
-            self::$logger->debug('Rota não encontrada');
-            $response->write([
-                "message" => "Rota não encontrada",
-                "status" => false,
-             ])->status(HTTPResponseCode::INFORMATIONNOTFOUND)->sendJson();
-        }
+        
 
         #Se for o method OPTIONS
         if (HTTPMethods::OPTIONS == $matcher->method) {
