@@ -153,6 +153,6 @@ class Response
     private function displayResponse($body)
     {
         echo $body;
-        die();
+        //die();
     }
 }
