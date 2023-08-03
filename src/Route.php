@@ -10,11 +10,12 @@ namespace Komodo\Routes;
 | Desenvolvido por: Jhonnata Paixão (Líder de Projeto)
 | Iniciado em: 15/10/2022
 | Arquivo: Route.php
-| Data da Criação Fri Jul 21 2023
+| Data da Criação Thu Aug 03 2023
 | Copyright (c) 2023
 |
 |-----------------------------------------------------------------------------
 |*/
+
 
 use Komodo\Routes\Enums\HTTPMethods;
 

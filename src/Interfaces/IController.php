@@ -15,6 +15,7 @@ namespace Komodo\Routes\Interfaces;
 |
 |-----------------------------------------------------------------------------
 |*/
+
 use Komodo\Routes\Request;
 use Komodo\Routes\Response;
 

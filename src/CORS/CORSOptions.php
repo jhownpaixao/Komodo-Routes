@@ -46,12 +46,11 @@ class CORSOptions
      *
      * @return void
      */
-    public function __construct($origins = [ "*" ], $originsPatterns = [ '*' ], $methods = [ '*' ], $headers = [ '*' ])
+    public function __construct($origins = ["*"], $originsPatterns = ['*'], $methods = ['*'], $headers = ['*'])
     {
         $this->origins = $origins;
         $this->origins = $originsPatterns;
         $this->origins = $methods;
         $this->origins = $headers;
     }
-
 }

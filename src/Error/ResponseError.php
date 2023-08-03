@@ -48,6 +48,6 @@ class ResponseError extends Exception
         $this->sendJson([
             "status" => false,
             "message" => $this->message,
-         ], $this->code ?? 500);
+        ], $this->code ?? 500);
     }
 }

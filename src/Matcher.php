@@ -21,6 +21,9 @@ use Komodo\Routes\Route;
 
 class Matcher
 {
+    /**
+     * @var string
+     */
     readonly public string $path;
 
     /**
@@ -32,9 +35,25 @@ class Matcher
      * @var array<string,string>|null
      */
     public $params;
+
+    /**
+     * @var string
+     */
     readonly public string $prefix;
+
+    /**
+     * @var array
+     */
     readonly public array $variables;
+
+    /**
+     * @var array
+     */
     readonly public array $middlewares;
+
+    /**
+     * @var HTTPMethods
+     */
     readonly public HTTPMethods $method;
 
     /**
@@ -54,10 +73,13 @@ class Matcher
     public function __construct($routes, $prefixes)
     {
 
-        $path = array_key_exists('QUERY_STRING', $_SERVER)?str_replace('route=', '/', $_SERVER[ 'QUERY_STRING' ]): $_SERVER[ 'REQUEST_URI' ];
+        $path = array_key_exists('QUERY_STRING', $_SERVER)
+            ? str_replace('route=', '/', $_SERVER['QUERY_STRING'])
+            : $_SERVER['REQUEST_URI'];
+
         $this->path = $path;
-        $this->method = HTTPMethods::from($_SERVER[ 'REQUEST_METHOD' ]);
-        $this->prefixes = $prefixes ?? [  ];
+        $this->method = HTTPMethods::from($_SERVER['REQUEST_METHOD']);
+        $this->prefixes = $prefixes ?? [];
         $this->routes = $routes;
         $this->getData();
     }
@@ -82,7 +104,7 @@ class Matcher
     public function match()
     {
         $routePath = $this->path;
-        $paths = array_filter(explode('/', $routePath)) ?: [ '1' => '/' ];
+        $paths = array_filter(explode('/', $routePath)) ?: ['1' => '/'];
         $mathedPaths = null;
 
         $mathedRoute = null;
@@ -90,33 +112,36 @@ class Matcher
 
         // check absolute
         if (array_key_exists($routePath, $this->routes)) {
-            $mathedRoute = $this->routes[ $routePath ];
+            $mathedRoute = $this->routes[$routePath];
         } else {
             foreach ($this->routes as $path => $route) {
-                $routeArr = array_filter(explode('/', $path)) ?: [ '1' => '/' ];
+                $routeArr = array_filter(explode('/', $path)) ?: ['1' => '/'];
                 //if (count($routeArr) != count($paths)) continue;
                 if ($mathedRoute) {
                     break;
                 }
 
+                if (count($routeArr) < count($paths)) {
+                    continue;
+                };
+
                 // ?Analize the actual routeArr
                 for ($i = 1; $i < count($routeArr) + 1; $i++) {
-                    $sRoute = array_key_exists($i, $routeArr) ? $routeArr[ $i ] : false;
-                    $sPath = array_key_exists($i, $paths) ? $paths[ $i ] : false;
+                    $sRoute = array_key_exists($i, $routeArr) ? $routeArr[$i] : false;
+                    $sPath = array_key_exists($i, $paths) ? $paths[$i] : false;
                     $mathedRoute = $route;
-                    $isParam = preg_match("/(?<={).+?(?=})/", $routeArr[ $i ], $param);
-                    if ($sRoute && $sPath && ($routeArr[ $i ] == $paths[ $i ] || $isParam)) {
+                    $isParam = preg_match("/(?<={).+?(?=})/", $routeArr[$i], $param);
+                    if ($sRoute && $sPath && ($routeArr[$i] == $paths[$i] || $isParam)) {
                         if ($isParam) {
-                            $mathedParams[ $param[ 0 ] ] = $paths[ $i ];
+                            $mathedParams[$param[0]] = $paths[$i];
                         }
 
                         if (!$isParam) {
-                            $mathedPaths = $paths[ $i ];
+                            $mathedPaths = $paths[$i];
                         }
 
                         continue;
-                    }
-                    ;
+                    };
 
                     $mathedRoute = null; //clean non matched
                     $mathedParams = null; //clean non matched

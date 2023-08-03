@@ -25,7 +25,15 @@ class Request
      * @var array|null
      */
     public $params;
+    
+    /**
+     * @var array
+     */
     public array $body = [  ];
+
+    /**
+     * @var array
+     */
     readonly public array $headers;
 
     /**

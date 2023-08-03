@@ -1,4 +1,5 @@
 <?php
+
 namespace Komodo\Routes\Interfaces;
 
 /*
@@ -14,6 +15,7 @@ namespace Komodo\Routes\Interfaces;
 |
 |-----------------------------------------------------------------------------
 |*/
+
 use Komodo\Routes\Response;
 
 trait ViewBaseFunctions
@@ -35,7 +37,7 @@ trait ViewBaseFunctions
      *
      * @return string|bool
      */
-    public function renderView($view, $variables = [  ])
+    public function renderView($view, $variables = [])
     {
         /*
         |-----------------------------------------------------------------------------
@@ -58,6 +60,7 @@ trait ViewBaseFunctions
         ob_start();
         include $view;
         $html = ob_get_clean();
+        
         /*
         |-----------------------------------------------------------------------------
         | Envio do html montado
@@ -72,7 +75,7 @@ trait ViewBaseFunctions
 
     public function sendView($view)
     {
-        $vars = is_array($this->body) ? $this->body : [  ];
+        $vars = is_array($this->body) ? $this->body : [];
 
         if ($this->template) {
             $html = $this->renderView($this->template, $vars);

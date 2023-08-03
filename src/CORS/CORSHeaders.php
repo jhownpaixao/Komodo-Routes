@@ -44,11 +44,11 @@ trait CORSHeaders
     private function getRequestOrigin()
     {
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
-            return $_SERVER[ 'HTTP_ORIGIN' ];
+            return $_SERVER['HTTP_ORIGIN'];
         } elseif (array_key_exists('HTTP_REFERER', $_SERVER)) {
-            return $_SERVER[ 'HTTP_REFERER' ];
+            return $_SERVER['HTTP_REFERER'];
         } else {
-            return $_SERVER[ 'REMOTE_ADDR' ];
+            return $_SERVER['REMOTE_ADDR'];
         };
     }
 }

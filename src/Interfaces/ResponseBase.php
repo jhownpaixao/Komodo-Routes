@@ -1,4 +1,5 @@
 <?php
+
 namespace Komodo\Routes\Interfaces;
 
 /*
@@ -31,7 +32,7 @@ trait ResponseBase
         $code = $code instanceof HTTPResponseCode ? $code->value : $code;
         self::prepareResponse($code, [
             "Content-Type" => "application/json",
-         ]);
+        ]);
         echo (json_encode($data));
         die();
     }
@@ -48,7 +49,7 @@ trait ResponseBase
      *
      * @return void
      */
-    private static function prepareResponse($code, $headers = [  ])
+    private static function prepareResponse($code, $headers = [])
     {
         foreach ($headers as $key => $value) {
             header("$key: $value");

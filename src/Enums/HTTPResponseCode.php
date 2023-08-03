@@ -18,23 +18,23 @@ namespace Komodo\Routes\Enums;
 
 enum HTTPResponseCode: int
 {
-/* Success */
+        /* Success */
     case continue  = 100;
     case accepted = 202;
     case created = 201;
     case success = 200;
     case partiallyCompletedProcess = 206;
 
-/* Redirect */
+        /* Redirect */
     case redirectingForResponse = 303;
 
-/* Warning */
+        /* Warning */
     case incompleteRequest = 400;
     case informationAlreadyExists = 409;
     case preconditionRequired = 428;
     case informationNotFound = 404;
 
-/* Error */
+        /* Error */
     case iternalErro = 500;
     case methodNotAllowed = 405;
     case informationNotTrue = 406;

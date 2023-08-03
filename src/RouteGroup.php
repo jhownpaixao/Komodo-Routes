@@ -44,7 +44,7 @@ class RouteGroup
     /**
      * Get the value of prefix
      *
-     * @return  string
+     * @return string
      */
     public function getPrefix()
     {
@@ -54,9 +54,9 @@ class RouteGroup
     /**
      * Set the value of prefix
      *
-     * @param  string  $prefix
+     * @param string $prefix
      *
-     * @return  self
+     * @return self
      */
     public function setPrefix(string $prefix)
     {
@@ -68,7 +68,7 @@ class RouteGroup
     /**
      * Get the value of middlewares
      *
-     * @return  callable|string|string[]
+     * @return callable|string|string[]
      */
     public function getMiddlewares()
     {
@@ -78,9 +78,9 @@ class RouteGroup
     /**
      * Set the value of middlewares
      *
-     * @param  callable|string|string[]  $middlewares
+     * @param callable|string|string[] $middlewares
      *
-     * @return  self
+     * @return self
      */
     public function setMiddlewares($middlewares)
     {
@@ -92,7 +92,7 @@ class RouteGroup
     /**
      * Get the value of routes
      *
-     * @return  Route[]
+     * @return Route[]
      */
     public function getRoutes()
     {
@@ -102,9 +102,9 @@ class RouteGroup
     /**
      * Set the value of routes
      *
-     * @param  Route  $route
+     * @param Route $route
      *
-     * @return  self
+     * @return self
      */
     public function addRoute($route)
     {

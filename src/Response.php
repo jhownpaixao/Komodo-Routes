@@ -65,7 +65,7 @@ class Response
         $this->body = $body;
         $this->headers = $headers ?: [
             "Content-Type" => "text/html; charset=utf-8",
-         ];
+        ];
         $this->processBody = $processBody ? $processBody : function ($body) {
             return $body;
         };
@@ -89,7 +89,7 @@ class Response
      */
     public function header($name, $value)
     {
-        $this->headers[ $name ] = $value;
+        $this->headers[$name] = $value;
         return $this;
     }
 
@@ -101,13 +101,9 @@ class Response
      */
     public function send()
     {
-
         $this->prepareResponse();
-
-        $body = call_user_func_array($this->processBody, [ $this->body ]);
-
+        $body = call_user_func_array($this->processBody, [$this->body]);
         $this->displayResponse($body);
-
     }
 
     /**
@@ -121,10 +117,9 @@ class Response
         $this->header("Content-Type", "application/json; charset=utf-8");
         $this->prepareResponse();
 
-        $body = call_user_func_array($this->processBody, [ $this->body ]);
-        $body = $body?json_encode($body): $body;
+        $body = call_user_func_array($this->processBody, [$this->body]);
+        $body = $body ? json_encode($body) : $body;
         $this->displayResponse($body);
-
     }
 
     /**
