@@ -42,7 +42,7 @@ class Router
     /**
      * @var RouteGroup[]
      */
-    private static $groupData = null;
+    private static $groupData = [  ];
 
     /**
      * @var \Closure|string|string[]
@@ -91,7 +91,7 @@ class Router
         $path = '/' != $path ? $path : '';
         /* Create Route */
         $path = self::$groupData?end(self::$groupData)->getPrefix() . $path:self::getPrefix() . $path;
-
+        // var_dump($path);
         $route = self::createRoute($path, $method, $callback);
         if (self::$groupData) {
             $route->setMiddleware(end(self::$groupData)->getMiddlewares());
@@ -100,7 +100,6 @@ class Router
             $route->setMiddleware(self::$middewares);
             self::$routes[ $path ] = $route;
         }
-
         // self::$routes[ $path ] = $route;
         return new self;
     }
@@ -137,6 +136,7 @@ class Router
     {
         $group = array_pop(self::$groupData);
 
+
         foreach ($group->getRoutes() as $route) {
             if (array_key_exists($route->path, self::$routes)) { //Se a rota ja existir
                 if (gettype(self::$routes[ $route->path ]) != 'array') { //Transforma em array caso ainda não seja
@@ -151,7 +151,9 @@ class Router
         self::$data = [  ];
         self::$middewares = null;
         $prfx = explode('/', self::$prefix);
+
         array_pop($prfx);
+
         self::$prefix = implode('/', $prfx);
     }
 
@@ -360,8 +362,7 @@ class Router
             "method" => $matcher->method->getValue(),
          ], 'Inicializando rotas');
 
-
-         #Verificar se a rota existe
+        #Verificar se a rota existe
         if (!$matcher->route) {
             self::$logger->debug('Rota não encontrada');
             $response->write([
@@ -370,7 +371,6 @@ class Router
              ])->status(HTTPResponseCode::INFORMATIONNOTFOUND)->sendJson();
         }
 
-        
         #Se for um grupo de rotas
         if (is_array($matcher->route)) {
             foreach ($matcher->route as $var) {
@@ -381,8 +381,6 @@ class Router
         } elseif (self::validadeMethod($matcher->method, $matcher->route)) {
             $route = $matcher->route;
         }
-
-        
 
         #Se for o method OPTIONS
         if (HTTPMethods::OPTIONS == $matcher->method) {
@@ -445,7 +443,6 @@ class Router
 
         self::save();
 
-        // var_dump(self::$groupData);
         return new self;
     }
 
@@ -464,10 +461,6 @@ class Router
     {
         $prefix = $prefix ?: '';
         self::$prefix .= $prefix;
-
-        if (self::$groupData) {
-            end(self::$groupData)->setPrefix(self::$prefix);
-        }
 
         array_push(self::$prefixes, $prefix);
 

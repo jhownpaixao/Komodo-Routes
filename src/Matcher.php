@@ -102,7 +102,7 @@ class Matcher
 
         $mathedRoute = null;
         $mathedParams = null;
-     
+
         // check absolute
         if (array_key_exists($routePath, $this->routes)) {
             $mathedRoute = $this->routes[ $routePath ];
