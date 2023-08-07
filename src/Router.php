@@ -450,11 +450,6 @@ class Router
     {
         $prefix = $prefix ?: '';
         self::$prefix .= $prefix;
-
-        if (self::$groupData) {
-            end(self::$groupData)->setPrefix(self::$prefix);
-        }
-
         array_push(self::$prefixes, $prefix);
 
         return new self;
