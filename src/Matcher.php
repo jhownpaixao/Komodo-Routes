@@ -73,9 +73,13 @@ class Matcher
     public function __construct($routes, $prefixes)
     {
 
-        $path = array_key_exists('QUERY_STRING', $_SERVER)
-        ?str_replace('route=', '/', $_SERVER[ 'QUERY_STRING' ])
-        : $_SERVER[ 'REQUEST_URI' ];
+        if (isset($_GET[ 'route' ])) {
+            $path = '/' . array_shift($_GET);
+        } else {
+            $path = array_key_exists('QUERY_STRING', $_SERVER)
+            ?str_replace('route=', '/', $_SERVER[ 'QUERY_STRING' ])
+            : $_SERVER[ 'REQUEST_URI' ];
+        }
 
         $this->path = $path;
         $this->method = HTTPMethods::from($_SERVER[ 'REQUEST_METHOD' ]);
