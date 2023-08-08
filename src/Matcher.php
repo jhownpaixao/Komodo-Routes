@@ -98,57 +98,58 @@ class Matcher
     {
         $routePath = $this->path;
         $paths = array_filter(explode('/', $routePath)) ?: [ '1' => '/' ];
-        $mathedPaths = null;
-
-        $mathedRoute = null;
-        $mathedParams = null;
 
         // check absolute
         if (array_key_exists($routePath, $this->routes)) {
-            $mathedRoute = $this->routes[ $routePath ];
+            $this->route = $this->routes[ $routePath ];
         } else {
-            foreach ($this->routes as $path => $route) {
-                $routeArr = array_filter(explode('/', $path)) ?: [ '1' => '/' ];
-                //if (count($routeArr) != count($paths)) continue;
-                if ($mathedRoute) {
-                    break;
-                }
+            $this->selectRoute($paths);
+        }
+    }
 
-                if (count($routeArr) < count($paths)) {
+    public function selectRoute($paths)
+    {
+        $selectedRoute = null;
+        $selectedParams = [  ];
+        foreach ($this->routes as $path => $route) {
+            //? Rota já selecionada
+            if ($selectedRoute) {
+                break;
+            }
+
+            //? Desmontar rota
+            $routeArr = array_filter(explode('/', $path)) ?: [ '1' => '/' ];
+
+            # Numero de paths incompativeis com a rota atual
+            if (count($routeArr) != count($paths)) {
+                continue;
+            };
+
+            //? Seleciona a rota atual
+            $selectedRoute = $route;
+
+            //? Analizar a rota atual
+            for ($i = 1; $i < count($routeArr) + 1; $i++) {
+                $isParam = preg_match("/(?<={).+?(?=})/", $routeArr[ $i ], $params);
+                // var_dump($routeArr[ $i ] . " " . $paths[ $i ]. " isparam: $isParam");
+                if ($routeArr[ $i ] == $paths[ $i ] || $isParam) {
+                    if ($isParam) {
+                        $selectedParams[ $params[ 0 ] ] = $paths[ $i ];
+                    }
+                    /*  if (!$isParam) {
+                    $selectedParams = $paths[ $i ];
+
+                    } */
                     continue;
                 };
 
-                // ?Analize the actual routeArr
-                for ($i = 1; $i < count($routeArr) + 1; $i++) {
-                    $sRoute = array_key_exists($i, $routeArr) ? $routeArr[ $i ] : false;
-                    $sPath = array_key_exists($i, $paths) ? $paths[ $i ] : false;
-                    $mathedRoute = $route;
-                    $isParam = preg_match("/(?<={).+?(?=})/", $routeArr[ $i ], $param);
-                    if ($sRoute && $sPath && ($routeArr[ $i ] == $paths[ $i ] || $isParam)) {
-                        if ($isParam) {
-                            $mathedParams[ $param[ 0 ] ] = $paths[ $i ];
-                        }
-
-                        if (!$isParam) {
-                            $mathedPaths = $paths[ $i ];
-                        }
-
-                        continue;
-                    }
-                    ;
-
-                    $mathedRoute = null; //clean non matched
-                    $mathedParams = null; //clean non matched
-
-                    if ($mathedPaths) {
-                        break 2;
-                    } else {
-                        break 1;
-                    }
-                }
+                $selectedRoute = null; //clean non matched
+                $selectedParams = [  ]; //clean non matched
+                break;
             }
         }
-        $this->route = $mathedRoute;
-        $this->params = $mathedParams;
+
+        $this->route = $selectedRoute;
+        $this->params = $selectedParams;
     }
 }

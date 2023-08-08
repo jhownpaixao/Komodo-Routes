@@ -60,6 +60,36 @@ Router::prefix('/bb')->group(function () {
     });
 });
 
+Router::group(function () {
+    Router::get('/sem', function () {
+        echo "sem ok";
+    });
+
+    Router::get('/sem1', function () {
+        echo "SEM1 OK";
+    });
+
+    Router::get('/sem2', function () {
+        echo "sem2 OK";
+    });
+
+    Router::get('/sem2/{param}', function (Request $request) {
+        $p= $request->params['param'];
+        echo "sem2:: $p OK";
+    });
+    Router::get('/sem2/{param1}/{param2}', function (Request $request) {
+        $p1= $request->params['param1'];
+        $p2= $request->params['param2'];
+        echo "sem2:: $p1,$p2 OK";
+    });
+
+    Router::get('/sem22/{param1}/{param2}', function (Request $request) {
+        $p1= $request->params['param1'];
+        $p2= $request->params['param2'];
+        echo "sem22:: $p1,$p2 OK";
+    });
+});
+
 
 
 Router::get('/', function () {
