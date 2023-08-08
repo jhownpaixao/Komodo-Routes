@@ -136,7 +136,6 @@ class Router
     {
         $group = array_pop(self::$groupData);
 
-
         foreach ($group->getRoutes() as $route) {
             if (array_key_exists($route->path, self::$routes)) { //Se a rota ja existir
                 if (gettype(self::$routes[ $route->path ]) != 'array') { //Transforma em array caso ainda não seja
@@ -420,7 +419,7 @@ class Router
             $body = array_merge($body, $_FILES);
         }
         self::$logger->debug($body, 'Criando requeste');
-        $request = new Request($matcher->params, $body, apache_request_headers(), $matcher->method);
+        $request = new Request($matcher->params, $body, $_GET ?: [  ], apache_request_headers(), $matcher->method);
         #Executa as middlewares
         if ($route->middlewares) {
             self::processCallbacks($route->middlewares, $request, $response);
