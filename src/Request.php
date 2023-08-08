@@ -25,6 +25,11 @@ class Request
      * @var array|null
      */
     public $params;
+
+    /**
+     * @var array|null
+     */
+    public $query;
     
     /**
      * @var array
@@ -44,13 +49,15 @@ class Request
     /**
      * @param array|null $params
      * @param array $body
+     * @param array|null $query
      * @param array $headers
      * @param HTTPMethods $method
      */
-    public function __construct($params, $body, $headers, $method)
+    public function __construct($params, $body, $query, $headers, $method)
     {
         $this->params = $params;
         $this->body = $body;
+        $this->query = $query;
         $this->headers = $headers;
         $this->method = $method;
     }

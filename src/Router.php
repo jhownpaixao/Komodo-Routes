@@ -31,7 +31,7 @@ class Router
     /**
      * @var array
      */
-    private static $prefixes = [];
+    private static $prefixes = [  ];
 
     /**
      * @var string
@@ -42,7 +42,7 @@ class Router
     /**
      * @var Route[]
      */
-    private static $data = [];
+    private static $data = [  ];
 
     /**
      * @var RouteGroup[]
@@ -57,7 +57,7 @@ class Router
     /**
      * @var array<string,Route|Route[]>
      */
-    private static $routes = [];
+    private static $routes = [  ];
 
     /**
      * @var array<string,string>
@@ -65,7 +65,7 @@ class Router
     public static $paths = [
         'views' => '',
         'templates' => '',
-    ];
+     ];
 
     /**
      * @var string
@@ -94,7 +94,7 @@ class Router
 
         $path = '/' != $path ? $path : '';
         /* Create Route */
-        $path = self::$groupData ? end(self::$groupData)->getPrefix() . $path : self::getPrefix() . $path;
+        $path = self::$groupData?end(self::$groupData)->getPrefix() . $path:self::getPrefix() . $path;
 
         $route = self::createRoute($path, $method, $callback);
         if (self::$groupData) {
@@ -102,7 +102,7 @@ class Router
             end(self::$groupData)->addRoute($route);
         } else {
             $route->setMiddleware(self::$middewares);
-            self::$routes[$path] = $route;
+            self::$routes[ $path ] = $route;
         }
 
         // self::$routes[ $path ] = $route;
@@ -143,16 +143,16 @@ class Router
 
         foreach ($group->getRoutes() as $route) {
             if (array_key_exists($route->path, self::$routes)) { //Se a rota ja existir
-                if (gettype(self::$routes[$route->path]) != 'array') { //Transforma em array caso ainda não seja
-                    self::$routes[$route->path] = [self::$routes[$route->path]];
+                if (gettype(self::$routes[ $route->path ]) != 'array') { //Transforma em array caso ainda não seja
+                    self::$routes[ $route->path ] = [ self::$routes[ $route->path ] ];
                 }
-                array_push(self::$routes[$route->path], $route);
+                array_push(self::$routes[ $route->path ], $route);
             } else {
-                self::$routes[$route->path] = $route;
+                self::$routes[ $route->path ] = $route;
             }
         }
 
-        self::$data = [];
+        self::$data = [  ];
         self::$middewares = null;
         $prfx = explode('/', self::$prefix);
         array_pop($prfx);
@@ -174,7 +174,7 @@ class Router
         };
 
         if (is_callable($cbs)) {
-            call_user_func_array($cbs, [(object) $req, $res, $next]);
+            call_user_func_array($cbs, [ (object) $req, $res, $next ]);
             return;
         }
 
@@ -188,22 +188,22 @@ class Router
         switch ($type) {
             case 'array':
                 foreach ($cbs as $cb) {
-                    [$class, $method] = self::dismount($cb);
-                    self::classExecute($class, $method, [(object) $req, $res]);
+                    [ $class, $method ] = self::dismount($cb);
+                    self::classExecute($class, $method, [ (object) $req, $res ]);
                 };
                 break;
 
             case 'string':
-                [$class, $method] = self::dismount($cbs);
-                self::classExecute($class, $method, [(object) $req, $res]);
+                [ $class, $method ] = self::dismount($cbs);
+                self::classExecute($class, $method, [ (object) $req, $res ]);
                 break;
         };
     }
 
-    private static function classExecute($class, $method, $params = [])
+    private static function classExecute($class, $method, $params = [  ])
     {
         $m = new $class;
-        call_user_func_array([$m, $method], $params);
+        call_user_func_array([ $m, $method ], $params);
     }
 
     private static function dismount($str)
@@ -211,22 +211,22 @@ class Router
         $separator = '::';
         $defaultMethod = 'execute';
         $cb = explode($separator, $str);
-        $class = $cb[0];
-        $method = count($cb) > 1 ? $cb[1] : $defaultMethod;
-        return [$class, $method];
+        $class = $cb[ 0 ];
+        $method = count($cb) > 1 ? $cb[ 1 ] : $defaultMethod;
+        return [ $class, $method ];
     }
 
     private static function getPaths()
     {
-        $srvdir = str_replace("/", "", $_SERVER["REQUEST_URI"]);
-        $srvdir = explode(".php", $srvdir)[0];
+        $srvdir = str_replace("/", "", $_SERVER[ "REQUEST_URI" ]);
+        $srvdir = explode(".php", $srvdir)[ 0 ];
         $dirss = "";
         for ($i = 1; $i <= substr_count($srvdir, "/"); $i++) {
             $dirss = $dirss . "../";
         };
 
         /*  Logger::BreackAndLog([$srvdir, $dirss, APP_FOLDER]); */
-        return [$srvdir, $dirss];
+        return [ $srvdir, $dirss ];
     }
 
     /**
@@ -280,32 +280,32 @@ class Router
      */
     private static function filterOptions($routes)
     {
-        $methods = [];
+        $methods = [  ];
 
         if (is_array($routes)) {
             foreach ($routes as $route) {
-                $methods[] = $route->method;
+                $methods[  ] = $route->method;
             }
         } else {
-            $methods[] = $routes->method;
+            $methods[  ] = $routes->method;
         }
         return $methods;
     }
 
     private static function generateAllowedMethods($methods)
     {
-        $allows = [];
+        $allows = [  ];
 
         if (is_array($methods)) {
             foreach ($methods as $method) {
                 if (is_array($method)) {
                     $allows = self::generateAllowedMethods($method);
                 } else {
-                    $allows[] = $method instanceof HTTPMethods ? $method->value : $method;
+                    $allows[  ] = $method instanceof HTTPMethods ? $method->value : $method;
                 }
             }
         } else {
-            $allows[] = $methods instanceof HTTPMethods ? $methods->value : $methods;
+            $allows[  ] = $methods instanceof HTTPMethods ? $methods->value : $methods;
         }
         return $allows;
     }
@@ -348,7 +348,7 @@ class Router
             "route" => $matcher->path,
             "founded" => $matcher->route,
             "method" => $matcher->method->value,
-        ], 'Inicializando rotas');
+         ], 'Inicializando rotas');
 
         #Verificar se a rota existe
         if (!$matcher->route) {
@@ -356,7 +356,7 @@ class Router
             $response->write([
                 "message" => "Rota não encontrada",
                 "status" => false,
-            ])->status(HTTPResponseCode::informationNotFound)->sendJson();
+             ])->status(HTTPResponseCode::informationNotFound)->sendJson();
         }
 
         #Se for um grupo de rotas
@@ -386,7 +386,7 @@ class Router
                 ->write([
                     "message" => "Método não implementado",
                     "status" => false,
-                ])
+                 ])
                 ->status(HTTPResponseCode::methodNotAllowed)
                 ->header('Access-Control-Allow-Methods', implode(', ', $alloweds))
                 ->sendJson();
@@ -408,7 +408,7 @@ class Router
         }
 
         self::$logger->debug($body, 'Criando requeste');
-        $request = new Request($matcher->params, $body, apache_request_headers(), $matcher->method);
+        $request = new Request($matcher->params, $body, $_GET ?: [  ], apache_request_headers(), $matcher->method);
         #Executa as middlewares
         if ($route->middlewares) {
             self::processCallbacks($route->middlewares, $request, $response);
@@ -421,12 +421,12 @@ class Router
     public static function routeToHref($route)
     {
 
-        return ltrim(self::getPaths()[1] . ltrim($route, '/'), '/');
+        return ltrim(self::getPaths()[ 1 ] . ltrim($route, '/'), '/');
     }
 
     public static function group($callback)
     {
-        self::$groupData[] = new RouteGroup(self::$prefix, self::$middewares);
+        self::$groupData[  ] = new RouteGroup(self::$prefix, self::$middewares);
         $callback->__invoke();
 
         self::save();
