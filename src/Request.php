@@ -66,7 +66,7 @@ class Request
         $f = $_FILES ?: [  ];
         $b = [  ];
         if ($_POST) {
-            $this->body = $_POST;
+            $b = $_POST;
         } else {
             $body = @file_get_contents('php://input');
             $type = isset($this->headers[ 'Content-Type' ])?explode(';', $this->headers[ 'Content-Type' ])[ 0 ]:'';
