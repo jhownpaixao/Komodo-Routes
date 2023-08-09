@@ -51,6 +51,7 @@ class ResponseError extends Exception
              ];
         } else {
             $this->data = $message;
+            $m = isset($message[ 'message' ]) ? $message[ 'message' ] : '';
         }
 
         parent::__construct($m, $code, $previous);
