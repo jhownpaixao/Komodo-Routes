@@ -23,18 +23,37 @@ use Komodo\Routes\Interfaces\ResponseBase;
 class ResponseError extends Exception
 {
     use ResponseBase;
+
     /**
-     * @param string $message
+     * $data
+     *
+     * @var array<string,string|int>
+     */
+    private $data;
+
+    /**
+     * @param string|array $message
      * @param int|HTTPResponseCode $code
      * @param \Throwable|null $previous
      *
      * @return void
      */
+
     public function __construct($message, $code = HTTPResponseCode::iternalErro, \Throwable $previous = null)
     {
         $code = $code instanceof HTTPResponseCode ? $code->value : $code;
 
-        parent::__construct($message, $code, $previous);
+        if (is_string($message)) {
+            $m = $message;
+            $this->data = [
+                'status' => false,
+                'message' => $m,
+             ];
+        } else {
+            $this->data = $message;
+        }
+
+        parent::__construct($m, $code, $previous);
         $this->sendResponseToClient();
     }
 
@@ -45,9 +64,6 @@ class ResponseError extends Exception
 
     public function sendResponseToClient()
     {
-        $this->sendJson([
-            "status" => false,
-            "message" => $this->message,
-        ], $this->code ?? 500);
+        $this->sendJson($this->data, $this->code ?? 500);
     }
 }
