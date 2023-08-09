@@ -48,7 +48,6 @@ class Request
 
     /**
      * @param array|null $params
-     * @param array $body
      * @param array|null $query
      * @param array $headers
      * @param HTTPMethods $method
