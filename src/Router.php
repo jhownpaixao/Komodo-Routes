@@ -395,20 +395,8 @@ class Router
         #Definindo rota requisitada
         self::$current = $route->path;
 
-        #Definir corpo da requisição
-        if ($body = @file_get_contents('php://input')) {
-            if (!$body = json_decode($body, true)) {
-                $body = $_POST;
-            }
-        } else {
-            $body = $_POST;
-        }
-        if ($_FILES) {
-            $body = array_merge($body, $_FILES);
-        }
+        $request = new Request($matcher->params, $_GET ?: [  ], apache_request_headers(), $matcher->method);
 
-        self::$logger->debug($body, 'Criando requeste');
-        $request = new Request($matcher->params, $body, $_GET ?: [  ], apache_request_headers(), $matcher->method);
         #Executa as middlewares
         if ($route->middlewares) {
             self::processCallbacks($route->middlewares, $request, $response);
