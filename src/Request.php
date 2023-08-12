@@ -61,7 +61,7 @@ class Request
         $this->bodyParse();
     }
 
-    private function bodyParse()
+    protected function bodyParse()
     {
         $f = $_FILES ?: [  ];
         $b = [  ];

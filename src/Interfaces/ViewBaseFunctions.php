@@ -23,12 +23,12 @@ trait ViewBaseFunctions
     /**
      * @var string|null
      */
-    private $template;
+    protected $template;
 
     /**
      * @var string
      */
-    private $view;
+    protected $view;
 
     /**
      * @param Response $response

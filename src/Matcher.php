@@ -59,12 +59,12 @@ class Matcher
     /**
      * @var array
      */
-    private $prefixes;
+    protected $prefixes;
 
     /**
      * @var array<string,Route>
      */
-    private $routes;
+    protected $routes;
 
     /**
      * @param array $routes
@@ -88,12 +88,12 @@ class Matcher
         $this->getData();
     }
 
-    private function getData()
+    protected function getData()
     {
         $this->prefix = $this->getPrefix();
     }
 
-    private function getPrefix()
+    protected function getPrefix()
     {
         foreach ($this->prefixes as $prefix) {
             #if (str_contains($url, $prefix)) { <- para PHP 8+

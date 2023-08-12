@@ -21,7 +21,7 @@ trait CORSHeaders
     /**
      * @var CORSOptions
      */
-    private $corsOptions;
+    protected $corsOptions;
 
     public function setControllAllowOringin($oringin)
     {
@@ -41,7 +41,7 @@ trait CORSHeaders
         $this->setControllAllowOringin($this->getRequestOrigin());
     }
 
-    private function getRequestOrigin()
+    protected function getRequestOrigin()
     {
         if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
             return $_SERVER['HTTP_ORIGIN'];

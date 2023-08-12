@@ -31,33 +31,33 @@ class Router
     /**
      * @var array
      */
-    private static $prefixes = [  ];
+    protected static $prefixes = [  ];
 
     /**
      * @var string
      *
      */
-    private static $prefix;
+    protected static $prefix;
 
     /**
      * @var Route[]
      */
-    private static $data = [  ];
+    protected static $data = [  ];
 
     /**
      * @var RouteGroup[]
      */
-    private static $groupData = null;
+    protected static $groupData = null;
 
     /**
      * @var \Closure|string|string[]
      */
-    private static $middewares = null;
+    protected static $middewares = null;
 
     /**
      * @var array<string,Route|Route[]>
      */
-    private static $routes = [  ];
+    protected static $routes = [  ];
 
     /**
      * @var array<string,string>
@@ -77,7 +77,7 @@ class Router
      */
     public static $logger;
 
-    // #Private Methods
+    // #protected Methods
     public static function getPrefix()
     {
         return self::$prefix ?: '';
@@ -89,7 +89,7 @@ class Router
      *
      * @return Router
      */
-    private static function register($path, $callback, $method)
+    protected static function register($path, $callback, $method)
     {
 
         $path = '/' != $path ? $path : '';
@@ -114,7 +114,7 @@ class Router
      *
      * @return array
      */
-    private static function filterPaths($paths)
+    protected static function filterPaths($paths)
     {
         $paths = array_filter(explode('/', $paths));
         return $paths;
@@ -127,7 +127,7 @@ class Router
      *
      * @return Route
      */
-    private static function createRoute($path, $method = null, $callback = null)
+    protected static function createRoute($path, $method = null, $callback = null)
     {
         $route = new Route($path, $method);
         if ($callback) {
@@ -137,7 +137,7 @@ class Router
         return $route;
     }
 
-    private static function save()
+    protected static function save()
     {
         $group = array_pop(self::$groupData);
 
@@ -166,7 +166,7 @@ class Router
      *
      * @return void
      */
-    private static function processCallbacks($cbs, $req, $res)
+    protected static function processCallbacks($cbs, $req, $res)
     {
         $next = function () {
             global $res;
@@ -181,7 +181,7 @@ class Router
         self::execute($cbs, $req, $res, $next);
     }
 
-    private static function execute($cbs, $req, $res, $next)
+    protected static function execute($cbs, $req, $res, $next)
     {
         $type = gettype($cbs);
 
@@ -200,13 +200,13 @@ class Router
         };
     }
 
-    private static function classExecute($class, $method, $params = [  ])
+    protected static function classExecute($class, $method, $params = [  ])
     {
         $m = new $class;
         call_user_func_array([ $m, $method ], $params);
     }
 
-    private static function dismount($str)
+    protected static function dismount($str)
     {
         $separator = '::';
         $defaultMethod = 'execute';
@@ -216,7 +216,7 @@ class Router
         return [ $class, $method ];
     }
 
-    private static function getPaths()
+    protected static function getPaths()
     {
         $srvdir = str_replace("/", "", $_SERVER[ "REQUEST_URI" ]);
         $srvdir = explode(".php", $srvdir)[ 0 ];
@@ -235,7 +235,7 @@ class Router
      *
      * @return boolean
      */
-    private static function validateMethods($matcherMethod, $routeMethod)
+    protected static function validateMethods($matcherMethod, $routeMethod)
     {
         $matcherMethod = $matcherMethod instanceof HTTPMethods ? $matcherMethod->value : $matcherMethod;
 
@@ -257,7 +257,7 @@ class Router
      *
      * @return mixed
      */
-    private static function validadeMethod($requested, $route)
+    protected static function validadeMethod($requested, $route)
     {
 
         $methods = $route->method;
@@ -278,7 +278,7 @@ class Router
      *
      * @return array
      */
-    private static function filterOptions($routes)
+    protected static function filterOptions($routes)
     {
         $methods = [  ];
 
@@ -292,7 +292,7 @@ class Router
         return $methods;
     }
 
-    private static function generateAllowedMethods($methods)
+    protected static function generateAllowedMethods($methods)
     {
         $allows = [  ];
 

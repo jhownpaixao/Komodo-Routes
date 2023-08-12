@@ -29,7 +29,7 @@ class ResponseError extends Exception
      *
      * @var array<string,string|int>
      */
-    private $data;
+    protected $data;
 
     /**
      * @param string|array $message

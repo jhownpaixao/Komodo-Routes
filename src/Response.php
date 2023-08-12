@@ -49,7 +49,7 @@ class Response
     /**
      * @var CORSOptions
      */
-    private $corsOptions;
+    protected $corsOptions;
 
     /**
      * @param CORSOptions $cors
@@ -133,14 +133,14 @@ class Response
         return $this;
     }
 
-    // #Private Methods
+    // #protected Methods
     /**
      * @param int $code
      * @param array $headers
      *
      * @return void
      */
-    private function prepareResponse()
+    protected function prepareResponse()
     {
         $code = $this->code instanceof HTTPResponseCode ? $this->code->value : $this->code;
         foreach ($this->headers as $key => $value) {
@@ -150,7 +150,7 @@ class Response
         http_response_code($code);
     }
 
-    private function displayResponse($body)
+    protected function displayResponse($body)
     {
         echo $body;
         die();
