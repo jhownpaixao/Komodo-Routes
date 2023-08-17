@@ -63,7 +63,6 @@ class Request
 
     private function bodyParse()
     {
-        $f = $_FILES ?: [  ];
         $b = [  ];
         if ($_POST) {
             $b = $_POST;
@@ -83,7 +82,7 @@ class Request
                     break;
             }
         }
-        $this->body = array_merge($f, $b);
+        $this->body = $b;
     }
 
     /**
@@ -102,6 +101,9 @@ class Request
 
     public function parseMultipart($raw_data)
     {
+        if ($_FILES) {
+            return $_FILES;
+        }
         $boundary = substr($raw_data, 0, strpos($raw_data, "\r\n"));
 
         // Fetch each part
