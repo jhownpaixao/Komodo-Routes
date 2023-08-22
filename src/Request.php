@@ -64,24 +64,22 @@ class Request
     private function bodyParse()
     {
         $b = [  ];
-        if ($_POST) {
-            $b = $_POST;
-        } else {
-            $body = @file_get_contents('php://input');
-            $type = isset($this->headers[ 'Content-Type' ])?explode(';', $this->headers[ 'Content-Type' ])[ 0 ]:'';
-            switch ($type) {
-                case 'application/json':
-                    $b = $this->parseJson($body);
-                    break;
 
-                case 'multipart/form-data':
-                    $b = $this->parseMultipart($body);
-                    break;
-                default:
-                    $b = [ $body ];
-                    break;
-            }
+        $body = @file_get_contents('php://input');
+        $type = isset($this->headers[ 'Content-Type' ])?explode(';', $this->headers[ 'Content-Type' ])[ 0 ]:'';
+        switch ($type) {
+            case 'application/json':
+                $b = $this->parseJson($body);
+                break;
+
+            case 'multipart/form-data':
+                $b = $this->parseMultipart($body);
+                break;
+            default:
+                $b = [ $body ];
+                break;
         }
+
         $this->body = $b;
     }
 
@@ -101,8 +99,8 @@ class Request
 
     public function parseMultipart($raw_data)
     {
-        if ($_FILES) {
-            return $_FILES;
+        if ($_FILES || $_POST) {
+            return array_merge($_POST, $_FILES);
         }
         $boundary = substr($raw_data, 0, strpos($raw_data, "\r\n"));
 
