@@ -48,6 +48,8 @@ class ResponseError extends Exception
             $this->data = [
                 'status' => false,
                 'message' => $m,
+                'file'=>$this->file,
+                'line'=> $this->line,
              ];
         } else {
             $this->data = $message;
