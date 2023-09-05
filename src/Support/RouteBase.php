@@ -58,13 +58,40 @@ trait RouteBase
     }
 
     /**
-     * Get last middleware
+     * Get last middleware of queue
      *
-     * @return class-string
+     * @return class-string|class-string[]
      */
     private static function getCurrentMiddleware()
     {
         return array_pop(self::$middlewares);
+    }
+
+    /**
+     * Get all middleware for route register
+     *
+     * @return class-string[]
+     */
+    private static function getMiddlewares()
+    {
+        $routeMiddlewares = [  ];
+        $groupMiddlewares = [  ];
+        if ($group = self::getCurrentGroup()) {
+            $gpM = $group->getMiddlewares();
+            if (is_array($gpM)) {
+                array_merge($groupMiddlewares, $gpM);
+            } else {
+                array_push($groupMiddlewares, $gpM);
+            }
+        } else {
+            $rtM = self::getCurrentMiddleware();
+            if (is_array($rtM)) {
+                array_merge($routeMiddlewares, $rtM);
+            } else {
+                array_push($routeMiddlewares, $rtM);
+            }
+        }
+        return array_merge($routeMiddlewares, $groupMiddlewares);
     }
 
     /**
@@ -111,16 +138,16 @@ trait RouteBase
     public static function middleware($callback)
     {
         /* if ($group = self::getCurrentGroup()) {
-            $group->setMiddlewares($callback);
+        $group->setMiddlewares($callback);
         } else {
-            $route = end(self::$routes);
-            if ($route instanceof Route) {
-                $route->setMiddleware($callback);
-            } elseif (is_array($route)) {
-                foreach ($route as $current) {
-                    $current->setMiddleware($callback);
-                }
-            }
+        $route = end(self::$routes);
+        if ($route instanceof Route) {
+        $route->setMiddleware($callback);
+        } elseif (is_array($route)) {
+        foreach ($route as $current) {
+        $current->setMiddleware($callback);
+        }
+        }
         } */
 
         array_push(self::$middlewares, $callback);
