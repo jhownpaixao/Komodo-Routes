@@ -135,7 +135,6 @@ class Router
 
         #Definindo rota requisitada
         self::$current = $route->path;
-        var_dump($route->middlewares);
         #Executa as middlewares
         if ($route->middlewares) {
             self::processCallbacks($route->middlewares, $request, $response);
