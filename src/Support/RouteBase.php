@@ -30,7 +30,7 @@ trait RouteBase
     /** @var RouteGroup[] */
     private static $groups = [  ];
 
-    /** @var array<\Closure|callable|string> */
+    /** @var class-string|class-string[] */
     private static $middlewares = [  ];
 
     /** @var string[] */
@@ -60,7 +60,7 @@ trait RouteBase
     /**
      * Get last middleware
      *
-     * @return array<\Closure|callable|string>
+     * @return class-string
      */
     private static function getCurrentMiddleware()
     {
@@ -104,7 +104,7 @@ trait RouteBase
     }
 
     /**
-     * @param array<\Closure|callable|string> $callback
+     * @param class-string|class-string[] $callback
      *
      * @return static
      */

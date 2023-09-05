@@ -19,7 +19,7 @@ use Komodo\Routes\Interfaces\Middleware;
 |-----------------------------------------------------------------------------
 |*/
 
-final class AuthMiddleware implements Middleware
+final class TesteMiddleware implements Middleware
 {
     /** @var Request */
     private $request;
@@ -33,6 +33,6 @@ final class AuthMiddleware implements Middleware
     }
     public function run(): void
     {
-        echo 'em andamento<br>';
+        echo 'teste em andamento<br>';
     }
 }

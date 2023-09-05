@@ -11,6 +11,7 @@ use Komodo\Routes\Error\RouteException;
 use Komodo\Routes\Error\RouteNotFound;
 use Komodo\Routes\Http\Request;
 use Komodo\Routes\Http\Response;
+use Komodo\Routes\Interfaces\Middleware;
 use Komodo\Routes\Support\Matcher;
 use Komodo\Routes\Support\Route;
 
@@ -138,7 +139,7 @@ class Router
         self::$current = $route->path;
         #Executa as middlewares
         if ($route->middlewares) {
-            self::processCallbacks($route->middlewares, $request, $response);
+            self::processMiddlewares($route->middlewares, $request, $response);
         }
 
         #Executar o controller
@@ -239,6 +240,32 @@ class Router
         }
 
         self::execute($cbs, $req, $res, $next);
+    }
+
+    /**
+     * Processes a middleware
+     *
+     * @param  class-string|class-string[] $middlewares
+     * @return void
+     */
+    private static function processMiddlewares($middlewares, $req, $res)
+    {
+        $execute = fn($md, $rq, $rs) => (new $md($rq, $rs))->run();
+        $check = fn($md) => is_subclass_of($md, Middleware::class);
+
+        if (is_array($middlewares)) {
+            foreach ($middlewares as $middleware) {
+                if (!$check($middleware)) {
+                    self::$logger->debug('This class does not belong to or does not implement MiddlewareInterface::' . $middleware);
+                    continue;
+                };
+                $execute($middleware, $req, $res);
+            }
+        } elseif ($check($middlewares)) {
+            $execute($middlewares, $req, $res);
+        } else {
+            self::$logger->debug('This class does not belong to or does not implement MiddlewareInterface::' . $middlewares);
+        }
     }
 
     private static function execute($cbs, $req, $res, $next)

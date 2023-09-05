@@ -1,13 +1,14 @@
 <?php
 
 use Komodo\Example\Middlewares\AuthMiddleware;
+use Komodo\Example\Middlewares\TesteMiddleware;
 use Komodo\Routes\Enums\HTTPMethods;
 use Komodo\Routes\Error\RouteException;
 use Komodo\Routes\Http\Request;
 use Komodo\Routes\Http\Response;
 use Komodo\Routes\Router;
 
-Router::prefix('/testes')->middleware(AuthMiddleware::class . "::auth")->group(function () {
+Router::prefix('/testes')->middleware([ AuthMiddleware::class, TesteMiddleware::class ])->group(function () {
     Router::get('/', function () {
         echo "Pasta testes RAIZ";
     });
@@ -93,7 +94,7 @@ Router::group(function () {
     });
 });
 
-Router::middleware(AuthMiddleware::class . "::auth")->get('/', function () {
+Router::middleware(AuthMiddleware::class)->get('/', function () {
     echo "teste RAIZ GET";
 });
 
