@@ -83,14 +83,15 @@ trait RouteBase
             } else {
                 array_push($groupMiddlewares, $gpM);
             }
-        } else {
-            $rtM = self::getCurrentMiddleware();
-            if (is_array($rtM)) {
-                array_merge($routeMiddlewares, $rtM);
-            } else {
-                array_push($routeMiddlewares, $rtM);
-            }
         }
+
+        $rtM = self::getCurrentMiddleware();
+        if (is_array($rtM)) {
+            array_merge($routeMiddlewares, $rtM);
+        } else {
+            array_push($routeMiddlewares, $rtM);
+        }
+
         return array_merge($routeMiddlewares, $groupMiddlewares);
     }
 
