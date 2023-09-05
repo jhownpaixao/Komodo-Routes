@@ -1,7 +1,8 @@
 {
-  "php.version": "v7.4",
-  "intelephense.environment.phpVersion": "7.4.0",
+  "php.version": "v7.1",
+  "intelephense.environment.phpVersion": "7.1",
   "phpcs.standard": "PSR2",
+  "php-cs-fixer.rules": "@PSR2",
   "phpfmt.psr2": true,
   "phpfmt.indent_with_space": 4,
   "php-docblocker.alignParams": true,

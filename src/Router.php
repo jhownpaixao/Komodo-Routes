@@ -250,8 +250,14 @@ class Router
      */
     private static function processMiddlewares($middlewares, $req, $res)
     {
-        $execute = fn($md, $rq, $rs) => (new $md($rq, $rs))->run();
-        $check = fn($md) => is_subclass_of($md, Middleware::class);
+        $execute = function ($md, $rq, $rs) {
+            /** @var Middleware */
+            $mdlw = new $md($rq, $rs);
+            $mdlw->run();
+        };
+        $check = function ($md) {
+            return is_subclass_of($md, Middleware::class);
+        };
 
         if (is_array($middlewares)) {
             foreach ($middlewares as $middleware) {
