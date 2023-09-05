@@ -1,6 +1,8 @@
 <?php
+namespace Komodo\Example\Middlewares;
 
-namespace Komodo\Routes\Interfaces;
+use Komodo\Routes\Http\Request;
+use Komodo\Routes\Http\Response;
 
 /*
 |-----------------------------------------------------------------------------
@@ -9,16 +11,17 @@ namespace Komodo\Routes\Interfaces;
 |
 | Desenvolvido por: Jhonnata Paixão (Líder de Projeto)
 | Iniciado em: 15/10/2022
-| Arquivo: IController.php
-| Data da Criação Fri Jul 21 2023
+| Arquivo: AtuhMiddleware.php
+| Data da Criação Mon Sep 04 2023
 | Copyright (c) 2023
 |
 |-----------------------------------------------------------------------------
 |*/
-use Komodo\Routes\Request;
-use Komodo\Routes\Response;
 
-interface IController
+final class AuthMiddleware
 {
-    public static function execute(Request $request, Response $response);
+    public function auth(Request $request, Response $response)
+    {
+        echo 'em andamento<br>';
+    }
 }

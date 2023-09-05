@@ -1,6 +1,6 @@
 <?php
 
-namespace Komodo\Routes;
+namespace Komodo\Routes\Support;
 
 /*
 |-----------------------------------------------------------------------------
@@ -33,13 +33,12 @@ class RouteGroup
      */
     public $middlewares;
 
-    public function __construct($prefix = '', $middlewares = [])
+    public function __construct($prefix = '', $middlewares = [  ])
     {
         $this->prefix = $prefix;
         $this->middlewares = $middlewares;
-        $this->routes = [];
+        $this->routes = [  ];
     }
-
 
     /**
      * Get the value of prefix
@@ -85,7 +84,9 @@ class RouteGroup
     public function setMiddlewares($middlewares)
     {
         $this->middlewares = $middlewares;
-
+        foreach ($this->routes as $route) {
+            $route->setMiddleware($this->middlewares);
+        }
         return $this;
     }
 
@@ -108,7 +109,7 @@ class RouteGroup
      */
     public function addRoute($route)
     {
-        $this->routes[] = $route;
+        $this->routes[  ] = $route;
         return $this;
     }
 }

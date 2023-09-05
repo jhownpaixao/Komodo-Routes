@@ -1,6 +1,6 @@
 <?php
 
-namespace Komodo\Routes;
+namespace Komodo\Routes\Support;
 
 /*
 |-----------------------------------------------------------------------------
@@ -17,7 +17,7 @@ namespace Komodo\Routes;
 |*/
 
 use Komodo\Routes\Enums\HTTPMethods;
-use Komodo\Routes\Route;
+use Komodo\Routes\Support\Route;
 
 class Matcher
 {
@@ -71,7 +71,7 @@ class Matcher
         if (isset($_GET[ 'route' ])) {
             $path = '/' . array_shift($_GET);
         } else {
-            $path = array_key_exists('QUERY_STRING', $_SERVER)?str_replace('route=', '/', $_SERVER[ 'QUERY_STRING' ]): $_SERVER[ 'REQUEST_URI' ];
+            $path = array_key_exists('QUERY_STRING', $_SERVER) ? str_replace('route=', '/', $_SERVER[ 'QUERY_STRING' ]) : $_SERVER[ 'REQUEST_URI' ];
         }
 
         $this->path = $path;
@@ -125,7 +125,7 @@ class Matcher
             $routeArr = array_filter(explode('/', $path)) ?: [ '1' => '/' ];
 
             # Numero de paths incompativeis com a rota atual
-            if (count($routeArr) != count($paths)) {
+            if (count($routeArr) != count($paths) || preg_match("/route./i", $path)) {
                 continue;
             };
 
@@ -135,15 +135,11 @@ class Matcher
             //? Analizar a rota atual
             for ($i = 1; $i < count($routeArr) + 1; $i++) {
                 $isParam = preg_match("/(?<={).+?(?=})/", $routeArr[ $i ], $params);
-                // var_dump($routeArr[ $i ] . " " . $paths[ $i ]. " isparam: $isParam");
+
                 if ($routeArr[ $i ] == $paths[ $i ] || $isParam) {
                     if ($isParam) {
                         $selectedParams[ $params[ 0 ] ] = $paths[ $i ];
                     }
-                    /*  if (!$isParam) {
-                    $selectedParams = $paths[ $i ];
-
-                    } */
                     continue;
                 };
 

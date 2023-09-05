@@ -1,6 +1,6 @@
 <?php
 
-namespace Komodo\Routes;
+namespace Komodo\Routes\Http;
 
 /*******************************************************************************************
 EP Exodus Project

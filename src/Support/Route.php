@@ -1,6 +1,6 @@
 <?php
 
-namespace Komodo\Routes;
+namespace Komodo\Routes\Support;
 
 /*
 |-----------------------------------------------------------------------------
@@ -72,6 +72,7 @@ class Route extends \ArrayObject
      */
     public function setMiddleware($middlewares)
     {
+
         $this->middlewares = $middlewares;
     }
 

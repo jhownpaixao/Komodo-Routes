@@ -1,6 +1,6 @@
 <?php
 
-namespace Komodo\Routes;
+namespace Komodo\Routes\Http;
 
 /*
 |-----------------------------------------------------------------------------
@@ -21,39 +21,34 @@ use Komodo\Routes\Enums\HTTPMethods;
 class Request
 {
 
-    /**
-     * @var array|null
-     */
+    /** @var array|null */
     public $params;
 
-    /**
-     * @var array|null
-     */
+    /** @var array|null */
     public $query;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     public $body = [  ];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     public $headers;
 
-    /**
-     * @var HTTPMethods
-     */
+    /** @var HTTPMethods */
     public $method;
 
+    /** @var string */
+    public $path;
+
     /**
+     * @param string $path
      * @param array|null $params
      * @param array|null $query
      * @param array $headers
      * @param HTTPMethods $method
      */
-    public function __construct($params, $query, $headers, $method)
+    public function __construct($path, $params, $query, $headers, $method)
     {
+        $this->path = $path;
         $this->params = $params;
         $this->query = $query;
         $this->headers = $headers;
@@ -66,7 +61,7 @@ class Request
         $b = [  ];
 
         $body = @file_get_contents('php://input');
-        $type = isset($this->headers[ 'Content-Type' ])?explode(';', $this->headers[ 'Content-Type' ])[ 0 ]:'';
+        $type = isset($this->headers[ 'Content-Type' ]) ? explode(';', $this->headers[ 'Content-Type' ])[ 0 ] : '';
         switch ($type) {
             case 'application/json':
                 $b = $this->parseJson($body);

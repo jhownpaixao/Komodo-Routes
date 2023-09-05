@@ -9,8 +9,8 @@ namespace Komodo\Routes\Error;
 |
 | Desenvolvido por: Jhonnata Paixão (Líder de Projeto)
 | Iniciado em: 15/10/2022
-| Arquivo: ResponseError.php
-| Data da Criação Fri Jul 21 2023
+| Arquivo: RouteException.php
+| Data da Criação Mon Sep 04 2023
 | Copyright (c) 2023
 |
 |-----------------------------------------------------------------------------
@@ -18,18 +18,10 @@ namespace Komodo\Routes\Error;
 
 use Exception;
 use Komodo\Routes\Enums\HTTPResponseCode;
-use Komodo\Routes\Interfaces\ResponseBase;
+use Komodo\Routes\Router;
 
-class ResponseError extends RouteException
+class RouteException extends Exception
 {
-    use ResponseBase;
-
-    /**
-     * $data
-     *
-     * @var array<string,string|int>
-     */
-    private $data;
 
     /**
      * @param string|array $message
@@ -38,35 +30,15 @@ class ResponseError extends RouteException
      *
      * @return void
      */
-
     public function __construct($message, $code = HTTPResponseCode::ITERNALERRO, \Throwable $previous = null)
     {
         $code = $code instanceof HTTPResponseCode ? $code->getValue() : $code;
-
-        if (is_string($message)) {
-            $m = $message;
-            $this->data = [
-                'status' => false,
-                'message' => $m,
-                'file'=>$this->file,
-                'line'=> $this->line,
-             ];
-        } else {
-            $this->data = $message;
-            $m = isset($message[ 'message' ]) ? $message[ 'message' ] : '';
-        }
-
-        parent::__construct($m, $code, $previous);
-        $this->sendResponseToClient();
+        parent::__construct($message, $code, $previous);
+        Router::$logger->error($message);
     }
 
     public function __toString()
     {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
-    }
-
-    public function sendResponseToClient()
-    {
-        $this->sendJson($this->data, $this->code ?? 500);
     }
 }

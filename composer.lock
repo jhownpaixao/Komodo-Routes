@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jhownpaixao/Komodo-Logger.git",
-                "reference": "b75844537a985188eee9641408dbf21caaab987f"
+                "reference": "a56e8fda94175e9ae0d41437b925a5caaafa110e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jhownpaixao/Komodo-Logger/zipball/b75844537a985188eee9641408dbf21caaab987f",
-                "reference": "b75844537a985188eee9641408dbf21caaab987f",
+                "url": "https://api.github.com/repos/jhownpaixao/Komodo-Logger/zipball/a56e8fda94175e9ae0d41437b925a5caaafa110e",
+                "reference": "a56e8fda94175e9ae0d41437b925a5caaafa110e",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
                 "issues": "https://github.com/jhownpaixao/Komodo-Logger/issues",
                 "source": "https://github.com/jhownpaixao/Komodo-Logger/tree/main"
             },
-            "time": "2023-07-14T15:39:49+00:00"
+            "time": "2023-09-04T19:54:26+00:00"
         },
         {
             "name": "myclabs/php-enum",

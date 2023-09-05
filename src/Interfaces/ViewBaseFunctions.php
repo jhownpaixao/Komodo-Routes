@@ -14,7 +14,6 @@ namespace Komodo\Routes\Interfaces;
 |
 |-----------------------------------------------------------------------------
 |*/
-use Komodo\Routes\Response;
 
 trait ViewBaseFunctions
 {
@@ -29,7 +28,7 @@ trait ViewBaseFunctions
     private $view;
 
     /**
-     * @param Response $response
+     * @param \Komodo\Routes\Http\Response $response
      * @param string $view
      * @param array $variables
      *
