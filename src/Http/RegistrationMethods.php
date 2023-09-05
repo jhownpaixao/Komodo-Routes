@@ -17,6 +17,7 @@ namespace Komodo\Routes\Http;
 |*/
 
 use Komodo\Routes\Enums\HTTPMethods;
+use Komodo\Routes\Router;
 
 trait RegistrationMethods
 {
