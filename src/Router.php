@@ -91,10 +91,11 @@ class Router
         self::$logger = $logger ? clone $logger : new Logger;
         self::$logger->register(static::class);
         $matcher = new Matcher(self::$routes, self::$prefixes);
-        $response = new Response($cors ?: new CORSOptions);
-        $request = new Request($matcher->path, $matcher->params, $_GET ?: [  ], apache_request_headers(), $matcher->method);
         $route = null;
         $matcher->match();
+
+        $response = new Response($cors ?: new CORSOptions);
+        $request = new Request($matcher->path, $matcher->params, $_GET ?: [  ], apache_request_headers(), $matcher->method);
 
         self::$logger->debug([
             "route" => $matcher->path,
