@@ -319,4 +319,21 @@ class Router
             require_once $data;
         }
     }
+
+    public static function routeToHref($route)
+    {
+
+        return ltrim(self::getPaths()[1] . ltrim($route, '/'), '/');
+    }
+
+    private static function getPaths()
+    {
+        $srvdir = str_replace("/", "", $_SERVER["REQUEST_URI"]);
+        $srvdir = explode(".php", $srvdir)[0];
+        $dirss = "";
+        for ($i = 1; $i <= substr_count($srvdir, "/"); $i++) {
+            $dirss = $dirss . "../";
+        };
+        return [$srvdir, $dirss];
+    }
 }
