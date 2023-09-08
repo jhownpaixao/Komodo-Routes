@@ -70,6 +70,11 @@ class Request
             case 'multipart/form-data':
                 $b = $this->parseMultipart($body);
                 break;
+
+            case 'application/x-www-form-urlencoded':
+                $b = $this->parseUrlEnconded($body);
+                break;
+
             default:
                 $b = [ $body ];
                 break;
@@ -153,5 +158,18 @@ class Request
     public function parseJson($raw_data)
     {
         return json_decode($raw_data, true) ?: [  ];
+    }
+
+    public function parseUrlEnconded($raw_data)
+    {
+        $data = [  ];
+        foreach (explode('&', $raw_data) as $chunk) {
+            $param = explode("=", $chunk);
+
+            if ($param) {
+                $data[ urldecode($param[ 0 ]) ] = urldecode($param[ 1 ]);
+            }
+        }
+        return $data;
     }
 }
