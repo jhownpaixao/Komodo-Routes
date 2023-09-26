@@ -51,6 +51,8 @@ class Response
      */
     private $corsOptions;
 
+    private $preparedEvent = false;
+
     /**
      * @param CORSOptions $cors
      * @param array|null $params
@@ -132,11 +134,14 @@ class Response
      */
     public function sendEvent()
     {
-        
+
         $this->header("Content-Type", "text/event-stream; charset=utf-8");
         $this->header("Connection", "keep-alive");
         $this->header("Cache-Control", "no-store");
-        $this->prepareResponse();
+        if (!$this->preparedEvent) {
+            $this->prepareResponse();
+            $this->preparedEvent = true;
+        }
 
         $body = call_user_func_array($this->processBody, [$this->body]);
         $this->displaySSEResponse($body);
