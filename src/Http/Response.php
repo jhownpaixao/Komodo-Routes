@@ -65,7 +65,7 @@ class Response
         $this->body = $body;
         $this->headers = $headers ?: [
             "Content-Type" => "text/html; charset=utf-8",
-         ];
+        ];
         $this->processBody = $processBody ? $processBody : function ($body) {
             return $body;
         };
@@ -89,7 +89,7 @@ class Response
      */
     public function header($name, $value)
     {
-        $this->headers[ $name ] = $value;
+        $this->headers[$name] = $value;
         return $this;
     }
 
@@ -102,7 +102,7 @@ class Response
     public function send()
     {
         $this->prepareResponse();
-        $body = call_user_func_array($this->processBody, [ $this->body ]);
+        $body = call_user_func_array($this->processBody, [$this->body]);
         $this->displayResponse($body);
     }
 
@@ -117,9 +117,29 @@ class Response
         $this->header("Content-Type", "application/json; charset=utf-8");
         $this->prepareResponse();
 
-        $body = call_user_func_array($this->processBody, [ $this->body ]);
-        $body = $body?json_encode($body): $body;
+        $body = call_user_func_array($this->processBody, [$this->body]);
+        $body = $body ? json_encode($body) : $body;
         $this->displayResponse($body);
+    }
+
+    /**
+     * Send a SSE method
+     *
+     * @param string $name name of header
+     * @param string|number $value value of header
+     *
+     * @return void
+     */
+    public function sendEvent()
+    {
+        
+        $this->header("Content-Type", "text/event-stream; charset=utf-8");
+        $this->header("Connection", "keep-alive");
+        $this->header("Cache-Control", "no-store");
+        $this->prepareResponse();
+
+        $body = call_user_func_array($this->processBody, [$this->body]);
+        $this->displaySSEResponse($body);
     }
 
     /**
@@ -154,5 +174,13 @@ class Response
     {
         echo $body;
         die();
+    }
+    private function displaySSEResponse($body)
+    {
+        echo "\n\n";
+        $d = json_encode($body);
+        echo "data:{$d}";
+        ob_flush();
+        flush();
     }
 }
