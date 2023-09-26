@@ -139,6 +139,7 @@ class Response
         $this->header("Connection", "keep-alive");
         $this->header("Cache-Control", "no-store");
         if (!$this->preparedEvent) {
+            set_time_limit(0);
             $this->prepareResponse();
             $this->preparedEvent = true;
         }
