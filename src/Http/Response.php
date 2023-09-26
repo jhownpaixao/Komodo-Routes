@@ -120,7 +120,7 @@ class Response
         $this->prepareResponse();
 
         $body = call_user_func_array($this->processBody, [$this->body]);
-        $body = $body ? json_encode($body) : $body;
+        $body = !is_null($body) ? json_encode($body) : $body;
         $this->displayResponse($body);
     }
 
