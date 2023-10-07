@@ -74,11 +74,13 @@ trait RouteBase
      */
     private static function getMiddlewares()
     {
+
         $routeMiddlewares = [];
         $groupMiddlewares = [];
 
         if ($group = self::getCurrentGroup()) {
             $gpM = $group->getMiddlewares();
+
             if (is_array($gpM)) {
                 $groupMiddlewares = array_merge($groupMiddlewares, $gpM);
             } else {
@@ -87,11 +89,13 @@ trait RouteBase
         }
 
         $rtM = self::getCurrentMiddleware();
+
         if (is_array($rtM)) {
-            array_merge($routeMiddlewares, $rtM);
+            $routeMiddlewares =  array_merge($routeMiddlewares, $rtM);
         } else {
-            array_push($routeMiddlewares, $rtM);
+            $routeMiddlewares[] = $rtM;
         }
+
         return array_merge($routeMiddlewares, $groupMiddlewares);
     }
 
