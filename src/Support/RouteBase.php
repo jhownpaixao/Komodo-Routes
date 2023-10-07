@@ -76,6 +76,7 @@ trait RouteBase
     {
         $routeMiddlewares = [  ];
         $groupMiddlewares = [  ];
+        var_dump(self::$middlewares);
         if ($group = self::getCurrentGroup()) {
             $gpM = $group->getMiddlewares();
             if (is_array($gpM)) {

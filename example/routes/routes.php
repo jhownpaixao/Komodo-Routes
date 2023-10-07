@@ -8,7 +8,7 @@ use Komodo\Routes\Http\Request;
 use Komodo\Routes\Http\Response;
 use Komodo\Routes\Router;
 
-Router::prefix('/testes')->middleware([ AuthMiddleware::class, TesteMiddleware::class ])->group(function () {
+Router::prefix('/testes')->middleware(AuthMiddleware::class)->group(function () {
     Router::get('/', function () {
         echo "Pasta testes RAIZ";
     });
@@ -22,7 +22,7 @@ Router::prefix('/testes')->middleware([ AuthMiddleware::class, TesteMiddleware::
     });
 });
 
-Router::prefix('/aa')->group(function () {
+Router::middleware([ AuthMiddleware::class, TesteMiddleware::class ])->prefix('/aa')->group(function () {
     Router::get('/', function () {
         echo "Pasta aa RAIZ";
     });
@@ -64,7 +64,7 @@ Router::prefix('/bb')->group(function () {
     });
 });
 
-Router::group(function () {
+Router::middleware([AuthMiddleware::class, TesteMiddleware::class])->group(function () {
     Router::get('/sem', function () {
         echo "sem ok";
     });

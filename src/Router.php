@@ -59,8 +59,8 @@ class Router
         /* Create Route */
         $path = $group ? $group->getPrefix() . $path : self::parsedPrefix() . $path;
         $route = self::createRoute($path, $method, $callback);
-        $route->setMiddleware(self::getMiddlewares());
-
+        $route->setMiddleware($group ? $group->getMiddlewares() : self::getMiddlewares());
+        
         if ($group) {
             $group->addRoute($route);
         } else {

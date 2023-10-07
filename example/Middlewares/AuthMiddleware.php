@@ -33,6 +33,6 @@ final class AuthMiddleware implements Middleware
     }
     public function run(): void
     {
-        echo 'em andamento<br>';
+        echo 'middleware em andamento<br>';
     }
 }
