@@ -28,14 +28,14 @@ trait RouteBase
     //#Currente route process data
 
     /** @var RouteGroup[] */
-    private static $groups = [  ];
+    private static $groups = [];
 
     /** @var class-string|class-string[] */
-    private static $middlewares = [  ];
+    private static $middlewares = [];
 
     /** @var string[] */
 
-    private static $prefixes = [  ];
+    private static $prefixes = [];
 
     /**
      * Get last prefix
@@ -74,14 +74,15 @@ trait RouteBase
      */
     private static function getMiddlewares()
     {
-        $routeMiddlewares = [  ];
-        $groupMiddlewares = [  ];
+        $routeMiddlewares = [];
+        $groupMiddlewares = [];
+
         if ($group = self::getCurrentGroup()) {
             $gpM = $group->getMiddlewares();
             if (is_array($gpM)) {
-                array_merge($groupMiddlewares, $gpM);
+                $groupMiddlewares = array_merge($groupMiddlewares, $gpM);
             } else {
-                array_push($groupMiddlewares, $gpM);
+                $groupMiddlewares[] = $gpM;
             }
         }
 
@@ -91,7 +92,6 @@ trait RouteBase
         } else {
             array_push($routeMiddlewares, $rtM);
         }
-
         return array_merge($routeMiddlewares, $groupMiddlewares);
     }
 
@@ -123,7 +123,8 @@ trait RouteBase
      */
     public static function group($callback)
     {
-        self::$groups[  ] = new RouteGroup(self::parsedPrefix(), self::getCurrentMiddleware());
+        $md = self::getMiddlewares();
+        self::$groups[] = new RouteGroup(self::parsedPrefix(), $md);
         $callback();
 
         self::saveGroup();
@@ -176,7 +177,7 @@ trait RouteBase
      */
     public static function error($callback)
     {
-        self::register('route.error', $callback, [  ]);
+        self::register('route.error', $callback, []);
         return new self;
     }
 
@@ -208,12 +209,12 @@ trait RouteBase
 
         foreach ($group->getRoutes() as $route) {
             if (array_key_exists($route->path, self::$routes)) { //Se a rota ja existir
-                if (gettype(self::$routes[ $route->path ]) != 'array') { //Transforma em array caso ainda não seja
-                    self::$routes[ $route->path ] = [ self::$routes[ $route->path ] ];
+                if (gettype(self::$routes[$route->path]) != 'array') { //Transforma em array caso ainda não seja
+                    self::$routes[$route->path] = [self::$routes[$route->path]];
                 }
-                array_push(self::$routes[ $route->path ], $route);
+                array_push(self::$routes[$route->path], $route);
             } else {
-                self::$routes[ $route->path ] = $route;
+                self::$routes[$route->path] = $route;
             }
         }
 
