@@ -76,7 +76,6 @@ trait RouteBase
     {
         $routeMiddlewares = [  ];
         $groupMiddlewares = [  ];
-        var_dump(self::$middlewares);
         if ($group = self::getCurrentGroup()) {
             $gpM = $group->getMiddlewares();
             if (is_array($gpM)) {
@@ -139,21 +138,7 @@ trait RouteBase
      */
     public static function middleware($callback)
     {
-        /* if ($group = self::getCurrentGroup()) {
-        $group->setMiddlewares($callback);
-        } else {
-        $route = end(self::$routes);
-        if ($route instanceof Route) {
-        $route->setMiddleware($callback);
-        } elseif (is_array($route)) {
-        foreach ($route as $current) {
-        $current->setMiddleware($callback);
-        }
-        }
-        } */
-
         array_push(self::$middlewares, $callback);
-
         return new self;
     }
 
