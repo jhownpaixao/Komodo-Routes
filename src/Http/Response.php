@@ -140,6 +140,7 @@ class Response
         $this->header("Cache-Control", "no-store");
         if (!$this->preparedEvent) {
             set_time_limit(0);
+            session_write_close(); //prevent blocking request
             $this->prepareResponse();
             $this->preparedEvent = true;
         }
