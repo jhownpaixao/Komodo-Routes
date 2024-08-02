@@ -35,7 +35,7 @@ class Router
     use \Komodo\Routes\Support\RouteBase;
 
     /** @var array<string,Route|Route[]> */
-    private static $routes = [  ];
+    private static $routes = [];
 
     /** @var Logger */
     public static $logger;
@@ -59,12 +59,23 @@ class Router
         /* Create Route */
         $path = $group ? $group->getPrefix() . $path : self::parsedPrefix() . $path;
         $route = self::createRoute($path, $method, $callback);
-        $route->setMiddleware($group ? $group->getMiddlewares() : self::getMiddlewares());
-        
+
+        $middlewares = [];
+
+        if ($group) {
+            $goupMiddlewares = $group->getMiddlewares();
+            if (!is_array($goupMiddlewares)) {
+                $goupMiddlewares = [$goupMiddlewares];
+            }
+            $middlewares = array_replace($middlewares, $goupMiddlewares);
+        }
+        $middlewares =  array_filter(array_replace($middlewares, self::getMiddlewares()));
+        $route->setMiddleware($middlewares);
+
         if ($group) {
             $group->addRoute($route);
         } else {
-            self::$routes[ $path ] = isset(self::$routes[ $path ]) ? [ self::$routes[ $path ], $route ] : $route;
+            self::$routes[$path] = isset(self::$routes[$path]) ? [self::$routes[$path], $route] : $route;
         }
 
         return new self;
@@ -94,13 +105,13 @@ class Router
         $matcher->match();
 
         $response = new Response($cors ?: new CORSOptions);
-        $request = new Request($matcher->path, $matcher->params, $_GET ?: [  ], apache_request_headers(), $matcher->method);
+        $request = new Request($matcher->path, $matcher->params, $_GET ?: [], apache_request_headers(), $matcher->method);
 
         self::$logger->debug([
             "route" => $matcher->path,
             "founded" => $matcher->route,
             "method" => $matcher->method->getValue(),
-         ], 'Inicializando rotas');
+        ], 'Inicializando rotas');
 
         #Verificar se a rota existe
         if (!$matcher->route) {
@@ -153,8 +164,8 @@ class Router
      */
     private static function handleRouteError($error, $request, $response)
     {
-        if (isset(self::$routes[ 'route.error' ])) {
-            return call_user_func_array((self::$routes[ 'route.error' ])->callback, [ $error, $request, $response ]);
+        if (isset(self::$routes['route.error'])) {
+            return call_user_func_array((self::$routes['route.error'])->callback, [$error, $request, $response]);
         }
         throw $error;
     }
@@ -188,32 +199,32 @@ class Router
      */
     private static function filterOptions($routes)
     {
-        $methods = [  ];
+        $methods = [];
 
         if (is_array($routes)) {
             foreach ($routes as $route) {
-                $methods[  ] = $route->method;
+                $methods[] = $route->method;
             }
         } else {
-            $methods[  ] = $routes->method;
+            $methods[] = $routes->method;
         }
         return $methods;
     }
 
     private static function generateAllowedMethods($methods)
     {
-        $allows = [  ];
+        $allows = [];
 
         if (is_array($methods)) {
             foreach ($methods as $method) {
                 if (is_array($method)) {
                     $allows = self::generateAllowedMethods($method);
                 } else {
-                    $allows[  ] = $method instanceof HTTPMethods ? $method->getValue() : $method;
+                    $allows[] = $method instanceof HTTPMethods ? $method->getValue() : $method;
                 }
             }
         } else {
-            $allows[  ] = $methods instanceof HTTPMethods ? $methods->getValue() : $methods;
+            $allows[] = $methods instanceof HTTPMethods ? $methods->getValue() : $methods;
         }
         return $allows;
     }
@@ -233,7 +244,7 @@ class Router
         };
 
         if (is_callable($cbs)) {
-            call_user_func_array($cbs, [ (object) $req, $res, $next ]);
+            call_user_func_array($cbs, [(object) $req, $res, $next]);
             return;
         }
 
@@ -279,22 +290,22 @@ class Router
         switch ($type) {
             case 'array':
                 foreach ($cbs as $cb) {
-                    [ $class, $method ] = self::parseCallbacks($cb);
-                    self::classExecute($class, $method, [ (object) $req, $res ]);
+                    [$class, $method] = self::parseCallbacks($cb);
+                    self::classExecute($class, $method, [(object) $req, $res]);
                 };
                 break;
 
             case 'string':
-                [ $class, $method ] = self::parseCallbacks($cbs);
-                self::classExecute($class, $method, [ (object) $req, $res ]);
+                [$class, $method] = self::parseCallbacks($cbs);
+                self::classExecute($class, $method, [(object) $req, $res]);
                 break;
         };
     }
 
-    private static function classExecute($class, $method, $params = [  ])
+    private static function classExecute($class, $method, $params = [])
     {
         $m = new $class;
-        call_user_func_array([ $m, $method ], $params);
+        call_user_func_array([$m, $method], $params);
     }
 
     private static function parseCallbacks($str)
@@ -302,9 +313,9 @@ class Router
         $separator = '::';
         $defaultMethod = 'execute';
         $cb = explode($separator, $str);
-        $class = $cb[ 0 ];
-        $method = count($cb) > 1 ? $cb[ 1 ] : $defaultMethod;
-        return [ $class, $method ];
+        $class = $cb[0];
+        $method = count($cb) > 1 ? $cb[1] : $defaultMethod;
+        return [$class, $method];
     }
 
     /**
@@ -319,7 +330,7 @@ class Router
             require_once $data;
         }
     }
-    
+
     /**
      * Converte Route path to use on HREF attribute
      *
@@ -329,17 +340,17 @@ class Router
     public static function routeToHref($route)
     {
 
-        return ltrim(self::getPaths()[ 1 ] . ltrim($route, '/'), '/');
+        return ltrim(self::getPaths()[1] . ltrim($route, '/'), '/');
     }
 
     private static function getPaths()
     {
-        $srvdir = str_replace("/", "", $_SERVER[ "REQUEST_URI" ]);
-        $srvdir = explode(".php", $srvdir)[ 0 ];
+        $srvdir = str_replace("/", "", $_SERVER["REQUEST_URI"]);
+        $srvdir = explode(".php", $srvdir)[0];
         $dirss = "";
         for ($i = 1; $i <= substr_count($srvdir, "/"); $i++) {
             $dirss = $dirss . "../";
         };
-        return [ $srvdir, $dirss ];
+        return [$srvdir, $dirss];
     }
 }

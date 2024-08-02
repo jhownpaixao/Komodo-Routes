@@ -7,6 +7,13 @@ use Komodo\Routes\Http\Request;
 use Komodo\Routes\Http\Response;
 use Komodo\Routes\Router;
 
+Router::prefix('/exemplos')->group(function () {
+    Router::middleware(AuthMiddleware::class)->get('/', function () {
+        echo "teste RAIZ GET";
+    });
+    // require_once __DIR__ . '/exemplos.php';
+});
+
 Router::prefix('/testes')->middleware(AuthMiddleware::class)->group(function () {
     Router::get('/', function () {
         echo "Pasta testes RAIZ";
@@ -64,34 +71,33 @@ Router::prefix('/bb')->group(function () {
 });
 
 Router::middleware(AuthMiddleware::class)->prefix('/aee')->group(function () {
-   
 
     Router::prefix('/novo')->group(function () {
         Router::get('/sem', function () {
             echo "sem ok";
         });
-    
+
         Router::get('/sem1', function () {
             echo "SEM1 OK";
         });
-    
+
         Router::get('/sem2', function () {
             echo "sem2 OK";
         });
-    
+
         Router::get('/sem2/{param}', function (Request $request) {
-            $p = $request->params[ 'param' ];
+            $p = $request->params['param'];
             echo "sem2:: $p OK";
         });
         Router::get('/sem2/{param1}/{param2}', function (Request $request) {
-            $p1 = $request->params[ 'param1' ];
-            $p2 = $request->params[ 'param2' ];
+            $p1 = $request->params['param1'];
+            $p2 = $request->params['param2'];
             echo "sem2:: $p1,$p2 OK";
         });
-    
+
         Router::get('/sem22/{param1}/{param2}', function (Request $request) {
-            $p1 = $request->params[ 'param1' ];
-            $p2 = $request->params[ 'param2' ];
+            $p1 = $request->params['param1'];
+            $p2 = $request->params['param2'];
             echo "sem22:: $p1,$p2 OK";
         });
     });
@@ -109,18 +115,18 @@ Router::middleware(AuthMiddleware::class)->prefix('/aee')->group(function () {
     });
 
     Router::get('/sem2/{param}', function (Request $request) {
-        $p = $request->params[ 'param' ];
+        $p = $request->params['param'];
         echo "sem2:: $p OK";
     });
     Router::get('/sem2/{param1}/{param2}', function (Request $request) {
-        $p1 = $request->params[ 'param1' ];
-        $p2 = $request->params[ 'param2' ];
+        $p1 = $request->params['param1'];
+        $p2 = $request->params['param2'];
         echo "sem2:: $p1,$p2 OK";
     });
 
     Router::get('/sem22/{param1}/{param2}', function (Request $request) {
-        $p1 = $request->params[ 'param1' ];
-        $p2 = $request->params[ 'param2' ];
+        $p1 = $request->params['param1'];
+        $p2 = $request->params['param2'];
         echo "sem22:: $p1,$p2 OK";
     });
 });
@@ -137,7 +143,7 @@ Router::get('/teste2', function () {
     echo "teste 2";
 });
 
-Router::math('/match', [ HTTPMethods::GET, HTTPMethods::DELETE, HTTPMethods::PATCH, HTTPMethods::POST ], function (Request $request) {
+Router::math('/match', [HTTPMethods::GET, HTTPMethods::DELETE, HTTPMethods::PATCH, HTTPMethods::POST], function (Request $request) {
     echo "match method route: " . $request->method->getValue();
 });
 

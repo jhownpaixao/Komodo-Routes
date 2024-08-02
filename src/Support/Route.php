@@ -72,7 +72,6 @@ class Route extends \ArrayObject
      */
     public function setMiddleware($middlewares)
     {
-
         $this->middlewares = $middlewares;
     }
 
