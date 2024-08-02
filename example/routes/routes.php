@@ -1,7 +1,6 @@
 <?php
 
 use Komodo\Example\Middlewares\AuthMiddleware;
-use Komodo\Example\Middlewares\TesteMiddleware;
 use Komodo\Routes\Enums\HTTPMethods;
 use Komodo\Routes\Error\RouteException;
 use Komodo\Routes\Http\Request;
